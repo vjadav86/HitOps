@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hit Ops — SAM.gov Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400;500;700&family=Roboto:wght@400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,500;6..12,600;6..12,700;6..12,800&family=Roboto:wght@400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Material Design 3 · Google Dark Theme ── */
+:root {
+  /* Surface hierarchy — MD3 tonal elevation via color */
+  --bg0: #1a1c1e;        /* base background */
+  --bg1: #1f2124;        /* surface dim */
+  --bg2: #282b2e;        /* surface / cards */
+  --bg3: #30343a;        /* surface container high */
+  --bg4: #3c4043;        /* surface container highest */
+
+  /* Borders — MD3 outline */
+  --border:    rgba(255,255,255,0.08);
+  --border-md: rgba(255,255,255,0.13);
+  --border-hi: rgba(255,255,255,0.22);
+
+  /* Typography — Google on-surface tokens */
+  --text-1: #e8eaed;   /* on-surface */
+  --text-2: #9aa0a6;   /* on-surface-variant */
+  --text-3: #5f6368;   /* outline */
+
+  /* Primary — Google Blue (MD3 dark) */
+  --accent:       #8ab4f8;          /* primary */
+  --accent-light: #aecbfa;          /* primary light */
+  --accent-dark:  #1a73e8;          /* primary dark / container */
+  --accent-glow:  rgba(138,180,248,0.14);
+  --accent-container: rgba(138,180,248,0.12);
+
+  /* Semantic — MD3 tertiary tones */
+  --green:    #81c995;  --green-bg:  rgba(129,201,149,0.12);
+  --amber:    #fdd663;  --amber-bg:  rgba(253,214,99,0.12);
+  --blue:     #8ab4f8;  --blue-bg:   rgba(138,180,248,0.12);
+  --rose:     #f28b82;  --rose-bg:   rgba(242,139,130,0.12);
+  --purple:   #d0bcff;  --purple-bg: rgba(208,188,255,0.12);
+  --teal:     #78d9e2;  --teal-bg:   rgba(120,217,226,0.12);
+
+  /* MD3 shape scale */
+  --r-xs:   4px;   /* extra-small */
+  --r:      12px;  /* medium */
+  --r-lg:   16px;  /* large */
+  --r-xl:   28px;  /* extra-large (dialogs) */
+  --r-full: 100px; /* full (pills, FABs) */
+
+  /* Type stack */
+  --sans:    "Google Sans", "Nunito Sans", "Roboto", sans-serif;
+  --display: "Google Sans Display", "Google Sans", "Nunito Sans", sans-serif;
+  --mono:    "Roboto Mono", "Consolas", monospace;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg0);
+  color: var(--text-1);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── TOP APP BAR (MD3) ── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px;
+  background: var(--bg1);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px 0 16px;
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent-dark);
+  border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+/* MD3 headline small */
+.logo-name {
+  font-family: var(--display);
+  font-size: 22px; font-weight: 400;
+  color: var(--text-1); letter-spacing: 0;
+}
+.logo-divider { width: 1px; height: 20px; background: var(--border-md); margin: 0 16px; }
+.logo-sub { font-size: 13px; color: var(--text-3); letter-spacing: 0.02em; font-weight: 400; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+/* MD3 assist chip */
+.badge-live {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--green-bg);
+  border: 1px solid rgba(129,201,149,0.28);
+  border-radius: var(--r-full); padding: 5px 12px 5px 10px;
+  font-size: 12px; font-weight: 500; color: var(--green);
+  letter-spacing: 0.01em;
+}
+.dot-pulse {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── SETUP PAGE ── */
+.setup-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; padding: 60px 24px 80px;
+}
+/* MD3 label — small surface */
+.kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--accent-container);
+  border-radius: var(--r-full); padding: 6px 16px;
+  font-size: 12px; font-weight: 500; color: var(--accent-light);
+  letter-spacing: 0.05em; margin-bottom: 24px;
+}
+/* MD3 display small */
+.setup-h1 {
+  font-family: var(--display);
+  font-size: clamp(28px, 4vw, 45px); font-weight: 400;
+  letter-spacing: -0.01em; color: var(--text-1);
+  text-align: center; line-height: 1.15; margin-bottom: 14px;
+}
+.setup-h1 em { color: var(--accent-light); font-style: normal; font-weight: 500; }
+/* MD3 body large */
+.setup-desc {
+  font-size: 16px; color: var(--text-2); text-align: center;
+  max-width: 420px; line-height: 1.65; margin-bottom: 40px; letter-spacing: 0.02em;
+}
+
+/* MD3 outlined card */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-xl);
+  padding: 28px 28px 24px;
+  width: 100%; max-width: 520px;
+}
+
+/* ── MD3 TAB BAR ── */
+.tab-row {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1; padding: 12px 16px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+  color: var(--text-3); background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer; transition: color 0.2s, border-color 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.tab-btn.active { color: var(--accent-light); border-bottom-color: var(--accent-light); }
+.tab-btn:hover:not(.active) { color: var(--text-2); background: rgba(138,180,248,0.05); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── DROP ZONE ── */
+.drop-zone {
+  border: 2px dashed var(--border-md);
+  border-radius: var(--r-lg);
+  padding: 40px 24px;
+  text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative; background: rgba(255,255,255,0.02);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.drop-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+/* MD3 container */
+.drop-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--r-lg);
+  background: var(--accent-container);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; color: var(--accent-light);
+}
+/* MD3 title medium */
+.drop-title { font-family: var(--display); font-size: 16px; font-weight: 500; margin-bottom: 6px; letter-spacing: 0; }
+.drop-sub { font-size: 13px; color: var(--text-3); line-height: 1.6; letter-spacing: 0.02em; }
+.drop-formats { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
+
+.file-loaded {
+  background: rgba(129,201,149,0.06);
+  border: 1px solid rgba(129,201,149,0.28);
+  border-radius: var(--r); padding: 12px 16px;
+  display: none; align-items: center; gap: 12px;
+}
+.file-loaded.show { display: flex; }
+.file-icon-wrap {
+  width: 38px; height: 38px; border-radius: var(--r);
+  background: var(--green-bg); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--green);
+}
+.file-name { font-size: 14px; font-weight: 500; color: var(--text-1); letter-spacing: 0.01em; }
+.file-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.file-clear {
+  margin-left: auto; background: none; border: none; color: var(--text-3);
+  cursor: pointer; font-size: 18px; padding: 2px 4px; transition: color 0.15s;
+}
+.file-clear:hover { color: var(--rose); }
+
+/* ── HOW IT WORKS ── */
+.how-steps { display: flex; flex-direction: column; gap: 14px; }
+.how-step { display: flex; align-items: flex-start; gap: 12px; }
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: var(--accent-container);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--accent-light);
+  margin-top: 0px;
+}
+.step-text { font-size: 13px; color: var(--text-2); line-height: 1.65; letter-spacing: 0.01em; }
+.step-text a { color: var(--accent-light); text-decoration: none; }
+.step-text a:hover { text-decoration: underline; }
+.step-text strong { color: var(--text-1); font-weight: 500; }
+
+/* ── MD3 OUTLINED TEXT FIELD ── */
+.field { margin-bottom: 22px; }
+.field-lbl {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  letter-spacing: 0.04em; margin-bottom: 8px;
+}
+.field-lbl a { color: var(--accent-light); text-decoration: none; }
+.field-lbl a:hover { text-decoration: underline; }
+/* MD3 outlined input */
+.input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border-md);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  font-family: var(--sans); font-size: 14px;
+  color: var(--text-1); outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.01em;
+}
+.input::placeholder { color: var(--text-3); }
+.input:hover:not(:focus) { border-color: var(--border-hi); }
+.input:focus {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.hr { height: 1px; background: var(--border); margin: 22px 0; }
+
+/* ── MD3 ASSIST CHIPS ── */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: var(--r-xs);
+  font-size: 12px; font-weight: 500; border: 1px solid;
+  letter-spacing: 0.02em;
+}
+.c-accent { color: var(--accent-light); border-color: rgba(138,180,248,0.3); background: rgba(138,180,248,0.08); }
+.c-green  { color: var(--green);        border-color: rgba(129,201,149,0.28);  background: var(--green-bg); }
+.c-amber  { color: var(--amber);        border-color: rgba(253,214,99,0.28);   background: var(--amber-bg); }
+.c-blue   { color: var(--blue);         border-color: rgba(138,180,248,0.28);  background: var(--blue-bg); }
+.c-rose   { color: var(--rose);         border-color: rgba(242,139,130,0.28);  background: var(--rose-bg); }
+.c-teal   { color: var(--teal);         border-color: rgba(120,217,226,0.28);  background: var(--teal-bg); }
+.c-muted  { color: var(--text-3);       border-color: var(--border); background: transparent; }
+
+/* ── MD3 FILLED BUTTON ── */
+.btn-primary {
+  width: 100%;
+  background: var(--accent-dark);
+  color: #e8f0fe;
+  border: none;
+  border-radius: var(--r-full);
+  padding: 12px 24px;
+  font-family: var(--display);
+  font-size: 14px; font-weight: 500; letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,0); transition: background 0.15s;
+  border-radius: inherit;
+}
+.btn-primary:hover::after { background: rgba(255,255,255,0.08); }
+.btn-primary:hover { box-shadow: 0 2px 12px rgba(26,115,232,0.4); }
+.btn-primary:active { transform: scale(0.99); }
+.btn-primary:disabled { opacity: 0.38; cursor: not-allowed; }
+
+/* ── MD3 OUTLINED BUTTON ── */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-full);
+  color: var(--accent-light);
+  padding: 9px 20px;
+  font-family: var(--display); font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.btn-ghost:hover {
+  border-color: rgba(138,180,248,0.4);
+  background: rgba(138,180,248,0.06);
+}
+
+.foot-note { margin-top: 16px; text-align: center; font-size: 13px; color: var(--text-3); }
+.foot-note a { color: var(--accent-light); cursor: pointer; }
+.foot-note a:hover { text-decoration: underline; }
+
+/* MD3 error container */
+.err-box {
+  background: rgba(242,139,130,0.07);
+  border: 1px solid rgba(242,139,130,0.28);
+  border-radius: var(--r); padding: 12px 16px;
+  font-size: 13px; color: #f28b82; line-height: 1.6;
+  margin-top: 16px; display: none; letter-spacing: 0.01em;
+}
+
+/* ── SCAN PROGRESS ── */
+.scan-wrap {
+  display: none; flex-direction: column; align-items: center;
+  width: 100%; padding: 64px 24px 80px;
+}
+.scan-icon-ring {
+  width: 56px; height: 56px;
+  background: var(--accent-container);
+  border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+  animation: ringPulse 2.4s ease-in-out infinite;
+}
+@keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(138,180,248,0.25)} 50%{box-shadow:0 0 0 12px rgba(138,180,248,0)} }
+/* MD3 headline small */
+.scan-h { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: 0; margin-bottom: 6px; }
+.scan-sub { font-size: 14px; color: var(--text-3); margin-bottom: 40px; letter-spacing: 0.02em; }
+.scan-card-wrap { width: 100%; max-width: 500px; }
+.scan-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 22px 24px; margin-bottom: 12px;
+}
+.scan-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.scan-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; letter-spacing: 0.04em; }
+.scan-pct { font-size: 14px; font-weight: 500; color: var(--accent-light); }
+/* MD3 linear progress indicator */
+.prog-track {
+  height: 4px; background: rgba(138,180,248,0.16);
+  border-radius: var(--r-full); overflow: hidden;
+}
+.prog-fill {
+  height: 100%; background: var(--accent-light);
+  border-radius: var(--r-full); width: 0%;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.scan-msg { font-size: 13px; color: var(--text-2); margin-top: 10px; min-height: 18px; letter-spacing: 0.01em; }
+.scan-detail { font-size: 12px; color: var(--text-3); margin-top: 4px; min-height: 16px; }
+
+.log-scroll {
+  background: var(--bg1); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 16px;
+  height: 130px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.log-line { font-size: 11px; display: flex; gap: 10px; font-family: var(--mono); }
+.log-ts   { color: var(--text-3); flex-shrink: 0; }
+.log-ok   { color: var(--green); }
+.log-proc { color: var(--amber); }
+.log-warn { color: var(--rose); }
+.log-info { color: var(--text-2); }
+
+/* ── DASHBOARD ── */
+.dash { display: none; }
+.dash-inner { max-width: 1120px; margin: 0 auto; padding: 40px 24px 80px; }
+.dash-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 36px; flex-wrap: wrap; gap: 16px;
+}
+/* MD3 label medium */
+.dash-eyebrow { font-size: 12px; font-weight: 500; color: var(--accent-light); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+/* MD3 headline large */
+.dash-h { font-family: var(--display); font-size: 28px; font-weight: 400; letter-spacing: -0.01em; }
+.dash-meta { font-size: 13px; color: var(--text-3); margin-top: 5px; letter-spacing: 0.01em; }
+
+/* ── STATS ROW ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 40px;
+}
+@media (max-width: 860px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+/* MD3 filled tonal card */
+.stat-tile {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px 18px;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: default;
+}
+.stat-tile:hover { border-color: var(--border-md); background: var(--bg3); }
+/* MD3 display small */
+.stat-num {
+  font-family: var(--display); font-size: 32px; font-weight: 400;
+  letter-spacing: -0.01em; line-height: 1; color: var(--text-1); margin-bottom: 6px;
+}
+.stat-num.v-accent { color: var(--accent-light); }
+.stat-num.v-green  { color: var(--green); }
+.stat-num.v-amber  { color: var(--amber); }
+/* MD3 label medium */
+.stat-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; letter-spacing: 0.04em; }
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-size: 11px; font-weight: 700; color: var(--text-3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 12px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── MATCH BANDS ── */
+.match-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-bottom: 40px;
+}
+@media (max-width:560px) { .match-grid { grid-template-columns: 1fr; } }
+
+/* MD3 tonal surface card */
+.match-band {
+  border-radius: var(--r-lg); padding: 20px 22px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--border);
+}
+.match-band::before {
+  content:''; position:absolute; inset:0;
+  opacity:0; transition:opacity 0.2s;
+  background: rgba(255,255,255,0.04);
+}
+.match-band:hover { transform: translateY(-2px); }
+.match-band:hover::before { opacity:1; }
+
+.match-band.mb-high { background: rgba(129,201,149,0.06); border-color: rgba(129,201,149,0.22); }
+.match-band.mb-med  { background: rgba(253,214,99,0.06);  border-color: rgba(253,214,99,0.2); }
+.match-band.mb-low  { background: rgba(255,255,255,0.02); border-color: var(--border); }
+
+.match-band:hover.mb-high { box-shadow: 0 4px 20px rgba(129,201,149,0.1); }
+.match-band:hover.mb-med  { box-shadow: 0 4px 20px rgba(253,214,99,0.1); }
+.match-band:hover.mb-low  { box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+
+.mb-label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.mb-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.mb-high .mb-dot { background:var(--green); }
+.mb-med  .mb-dot { background:var(--amber); }
+.mb-low  .mb-dot { background:var(--text-3); }
+
+/* MD3 assist chip */
+.mb-tag {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+  padding: 3px 10px; border-radius: var(--r-xs); border: 1px solid;
+}
+.mb-high .mb-tag { color:var(--green);  border-color:rgba(129,201,149,0.3); background:rgba(129,201,149,0.1); }
+.mb-med  .mb-tag { color:var(--amber);  border-color:rgba(253,214,99,0.3);  background:rgba(253,214,99,0.1); }
+.mb-low  .mb-tag { color:var(--text-3); border-color:var(--border); background:transparent; }
+
+.mb-score-range { font-size: 12px; color: var(--text-3); }
+/* MD3 display small */
+.mb-count { font-family:var(--display); font-size:40px; font-weight:400; letter-spacing:-0.01em; line-height:1; margin-bottom:4px; }
+.mb-high .mb-count { color:var(--green); }
+.mb-med  .mb-count { color:var(--amber); }
+.mb-low  .mb-count { color:var(--text-3); }
+
+.mb-sub { font-size:12px; color:var(--text-3); margin-bottom:14px; letter-spacing:0.01em; }
+
+.mb-bar-row { display:flex; gap:3px; }
+.mb-seg { height:3px; border-radius:var(--r-full); flex:1; }
+.mb-high .mb-seg.filled { background:var(--green); }
+.mb-med  .mb-seg.filled { background:var(--amber); }
+.mb-low  .mb-seg.filled { background:var(--text-3); }
+.mb-seg.empty { background:var(--bg4); }
+
+.mb-footer { display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--border); }
+.mb-cta { font-size:12px; font-weight:500; color:var(--text-3); display:flex; align-items:center; gap:4px; transition:color 0.15s; letter-spacing:0.02em; }
+.match-band:hover .mb-cta { color:var(--accent-light); }
+
+/* ── CATEGORY CARDS ── */
+.cat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+@media (max-width:640px) { .cat-grid { grid-template-columns:1fr; } }
+
+/* MD3 elevated card */
+.cat-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 24px; cursor: pointer; position: relative; overflow: hidden;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  display: flex; flex-direction: column;
+}
+.cat-card:hover {
+  background: var(--bg3); border-color: var(--border-md);
+  transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+/* MD3 primary container stripe */
+.cat-card::before { content:''; position:absolute; top:0;left:0;right:0;height:3px; border-radius:var(--r-xl) var(--r-xl) 0 0; }
+.cc-sw::before { background: var(--blue); }
+.cc-hw::before { background: var(--amber); }
+.cc-pn::before { background: var(--purple); }
+.cc-pe::before { background: var(--green); }
+
+.ct-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+/* MD3 icon container */
+.ct-icon { width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
+.cc-sw .ct-icon { background:var(--blue-bg);   color:var(--blue); }
+.cc-hw .ct-icon { background:var(--amber-bg);  color:var(--amber); }
+.cc-pn .ct-icon { background:var(--purple-bg); color:var(--purple); }
+.cc-pe .ct-icon { background:var(--green-bg);  color:var(--green); }
+
+/* MD3 display medium */
+.ct-count { font-family:var(--display);font-size:45px;font-weight:400;letter-spacing:-0.01em;line-height:1; }
+.cc-sw .ct-count { color:var(--blue); }
+.cc-hw .ct-count { color:var(--amber); }
+.cc-pn .ct-count { color:var(--purple); }
+.cc-pe .ct-count { color:var(--green); }
+
+/* MD3 title large */
+.ct-name { font-family:var(--display);font-size:17px;font-weight:500;letter-spacing:0;margin-bottom:4px; }
+.cc-sw .ct-name { color:var(--blue); }
+.cc-hw .ct-name { color:var(--amber); }
+.cc-pn .ct-name { color:var(--purple); }
+.cc-pe .ct-name { color:var(--green); }
+
+/* MD3 body medium */
+.ct-desc { font-size:13px;color:var(--text-3);margin-bottom:16px;line-height:1.55;flex:1;letter-spacing:0.01em; }
+.ct-sublabel { font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:7px;margin-top:12px; }
+.ct-chips { display:flex;flex-wrap:wrap;gap:5px; }
+.ct-footer { display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border);margin-top:16px; }
+.ct-ai { display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--amber);letter-spacing:0.01em; }
+.ct-cta { font-size:12px;font-weight:500;color:var(--text-3);display:flex;align-items:center;gap:5px;transition:color 0.15s;letter-spacing:0.02em; }
+.cat-card:hover .ct-cta { color:var(--accent-light); }
+
+/* ── SIDE SHEET / DRAWER (MD3) ── */
+.drawer {
+  position:fixed;top:0;right:0;bottom:0;width:480px;
+  background:var(--bg1);
+  border-left:1px solid var(--border-md);z-index:200;
+  transform:translateX(100%);transition:transform 0.32s cubic-bezier(0.2,0,0,1);
+  display:flex;flex-direction:column;
+  box-shadow:-4px 0 20px rgba(0,0,0,0.35);
+}
+.drawer.open { transform:translateX(0); }
+@media (max-width:540px) { .drawer { width:100%; } }
+
+.drw-hd {
+  padding:18px 20px 16px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);flex-shrink:0;
+}
+.drw-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+/* MD3 title large */
+.drw-title { font-family:var(--display);font-size:18px;font-weight:400;letter-spacing:0; }
+
+/* MD3 icon button */
+.icon-btn {
+  width:32px;height:32px;
+  background:transparent;
+  border:none;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-2);font-size:14px;
+  transition:background 0.15s,color 0.15s;flex-shrink:0;
+}
+.icon-btn:hover { background:rgba(255,255,255,0.08);color:var(--text-1); }
+
+.filter-pills { display:flex;gap:6px;flex-wrap:wrap; }
+/* MD3 filter chip */
+.fpill {
+  padding:5px 12px;border-radius:var(--r-xs);font-size:12px;font-weight:500;
+  border:1px solid var(--border-md);background:transparent;color:var(--text-3);
+  cursor:pointer;transition:all 0.15s;font-family:var(--sans);
+  white-space:nowrap;letter-spacing:0.02em;
+}
+.fpill:hover { color:var(--text-1);border-color:var(--border-hi);background:rgba(255,255,255,0.04); }
+.fpill.active {
+  background:rgba(138,180,248,0.12);
+  border-color:rgba(138,180,248,0.4);
+  color:var(--accent-light);
+}
+
+.drw-body { flex:1;overflow-y:auto;padding:12px; }
+
+/* MD3 list item / card */
+.opp-row {
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px 16px;margin-bottom:8px;cursor:pointer;
+  transition:background 0.15s,border-color 0.15s;
+}
+.opp-row:hover { background:var(--bg3);border-color:var(--border-md); }
+/* MD3 body large */
+.opp-name { font-size:14px;font-weight:500;color:var(--text-1);line-height:1.4;margin-bottom:7px;letter-spacing:0; }
+.opp-meta { display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:9px; }
+.opp-agency,.opp-dot,.opp-date { font-size:12px;color:var(--text-3);letter-spacing:0.01em; }
+.opp-chips { display:flex;gap:5px;flex-wrap:wrap; }
+.opp-summary { font-size:12px;color:var(--text-3);line-height:1.65;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);letter-spacing:0.01em; }
+.empty-state { text-align:center;padding:48px 20px;font-size:14px;color:var(--text-3);letter-spacing:0.01em; }
+
+/* match dot */
+.match-dot { width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:2px; }
+.match-dot.high { background:var(--green); }
+.match-dot.med  { background:var(--amber); }
+.match-dot.low  { background:var(--text-3); }
+
+/* ── DIALOG / MODAL (MD3) ── */
+.modal-scrim {
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);
+  z-index:300;display:none;align-items:center;justify-content:center;padding:40px 20px;
+}
+.modal-scrim.open { display:flex; }
+/* MD3 dialog */
+.modal {
+  background:var(--bg2);
+  border-radius:var(--r-xl);
+  width:100%;max-width:600px;max-height:84vh;overflow-y:auto;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  animation:mIn 0.25s cubic-bezier(0.2,0,0,1);
+  border:1px solid var(--border-md);
+}
+@keyframes mIn { from{opacity:0;transform:translateY(16px) scale(0.97)} to{opacity:1;transform:none} }
+.modal-hd {
+  padding:24px 24px 16px;
+  display:flex;align-items:flex-start;gap:12px;
+  position:sticky;top:0;background:var(--bg2);z-index:1;
+  border-bottom:1px solid var(--border);
+}
+/* MD3 headline small */
+.modal-title { flex:1;font-family:var(--display);font-size:18px;font-weight:400;letter-spacing:0;line-height:1.35;color:var(--text-1);padding-right:8px; }
+.modal-body { padding:24px; }
+.m2 { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px; }
+@media (max-width:460px) { .m2 { grid-template-columns:1fr; } }
+.mf { margin-bottom:18px; }
+/* MD3 label small */
+.mf-lbl { font-size:11px;font-weight:500;color:var(--text-3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:7px; }
+/* MD3 body medium */
+.mf-val { font-size:14px;color:var(--text-1);letter-spacing:0.01em; }
+
+/* MD3 tonal badge */
+.ai-badge {
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--amber-bg);
+  border:1px solid rgba(253,214,99,0.25);
+  border-radius:var(--r-xs);
+  padding:8px 16px;font-size:13px;font-weight:500;color:var(--amber);
+  letter-spacing:0.01em;
+}
+.rel-wrap { display:flex;align-items:center;gap:14px; }
+.rel-track { flex:1;height:4px;background:rgba(138,180,248,0.14);border-radius:var(--r-full);overflow:hidden; }
+.rel-fill { height:100%;border-radius:var(--r-full); }
+.rel-score { font-family:var(--display);font-size:20px;font-weight:400;color:var(--accent-light);min-width:52px;text-align:right; }
+
+/* MD3 text button (link) */
+.ext-link {
+  display:inline-flex;align-items:center;gap:7px;
+  color:var(--accent-light);font-size:13px;font-weight:500;letter-spacing:0.02em;
+  padding:8px 16px;
+  border:1px solid rgba(138,180,248,0.28);
+  border-radius:var(--r-full);
+  text-decoration:none;
+  background:rgba(138,180,248,0.06);
+  transition:background 0.15s,border-color 0.15s;
+}
+.ext-link:hover { background:rgba(138,180,248,0.12);border-color:rgba(138,180,248,0.5); }
+
+/* ── MISSION PICKER ── */
+.mission-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; padding: 60px 24px 80px;
+}
+.mission-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; width: 100%; max-width: 960px;
+  margin-top: 40px;
+}
+@media (max-width: 800px) { .mission-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .mission-grid { grid-template-columns: 1fr; } }
+
+.mission-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 28px 24px;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+}
+.mission-card:hover {
+  background: var(--bg3); border-color: var(--border-md);
+  transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.28);
+}
+.mission-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  transition: opacity 0.2s;
+}
+.mc-tak::before    { background: linear-gradient(90deg, var(--blue), var(--teal)); }
+.mc-pace::before   { background: linear-gradient(90deg, var(--purple), var(--rose)); }
+.mc-custom::before { background: linear-gradient(90deg, var(--green), var(--amber)); }
+
+.mc-icon {
+  width: 48px; height: 48px; border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 18px;
+}
+.mc-tak    .mc-icon { background: rgba(138,180,248,0.12); color: var(--blue); }
+.mc-pace   .mc-icon { background: rgba(208,188,255,0.12); color: var(--purple); }
+.mc-custom .mc-icon { background: rgba(129,201,149,0.12); color: var(--green); }
+
+.mc-title {
+  font-family: var(--display); font-size: 18px; font-weight: 500;
+  letter-spacing: 0; margin-bottom: 6px;
+}
+.mc-tak    .mc-title { color: var(--blue); }
+.mc-pace   .mc-title { color: var(--purple); }
+.mc-custom .mc-title { color: var(--green); }
+
+.mc-desc { font-size: 13px; color: var(--text-3); line-height: 1.6; margin-bottom: 18px; letter-spacing: 0.01em; }
+.mc-keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+
+.mc-cta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.02em;
+  transition: gap 0.15s;
+}
+.mc-tak    .mc-cta { color: var(--blue); }
+.mc-pace   .mc-cta { color: var(--purple); }
+.mc-custom .mc-cta { color: var(--green); }
+.mission-card:hover .mc-cta { gap: 10px; }
+
+/* ── CUSTOM KEYWORD TAG INPUT ── */
+.tag-input-wrap {
+  background: var(--bg1);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r);
+  padding: 8px 10px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  align-items: center; min-height: 48px;
+  cursor: text; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.tag-input-wrap:focus-within {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(129,201,149,0.1);
+  border: 1px solid rgba(129,201,149,0.28);
+  color: var(--green);
+  border-radius: var(--r-xs); padding: 3px 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.tag-chip-remove {
+  background: none; border: none; cursor: pointer;
+  color: rgba(129,201,149,0.6); font-size: 14px; line-height: 1;
+  padding: 0; display: flex; align-items: center;
+  transition: color 0.15s;
+}
+.tag-chip-remove:hover { color: var(--rose); }
+.tag-input-field {
+  flex: 1; min-width: 100px;
+  background: none; border: none; outline: none;
+  font-family: var(--sans); font-size: 13px;
+  color: var(--text-1); letter-spacing: 0.01em;
+}
+.tag-input-field::placeholder { color: var(--text-3); }
+.tag-hint { font-size: 11px; color: var(--text-3); margin-top: 6px; letter-spacing: 0.01em; }
+
+/* back button in setup */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent; border: none;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--text-3); cursor: pointer;
+  padding: 4px 0; transition: color 0.15s;
+  letter-spacing: 0.01em; margin-bottom: 24px;
+}
+.back-btn:hover { color: var(--accent-light); }
+
+/* ── INFO CALLOUT ── */
+.info-box {
+  background:rgba(138,180,248,0.06);
+  border:1px solid rgba(138,180,248,0.22);
+  border-radius:var(--r); padding:14px 16px;
+  font-size:13px; color:var(--text-2); line-height:1.65;
+  display:flex; gap:10px; align-items:flex-start;
+  letter-spacing:0.01em;
+}
+.info-box svg { flex-shrink:0; margin-top:2px; color:var(--accent-light); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:4px;height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bg4);border-radius:var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background:var(--border-hi); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+.appear { opacity:0;animation:fadeUp 0.4s cubic-bezier(0.2,0,0,1) forwards; }
+.d1{animation-delay:.04s}.d2{animation-delay:.09s}.d3{animation-delay:.14s}.d4{animation-delay:.19s}.d5{animation-delay:.24s}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="7" r="2.5" fill="white"/>
+        <circle cx="7" cy="7" r="5.5" stroke="white" stroke-width="1.2"/>
+        <line x1="7" y1="0.5" x2="7" y2="3.2" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="7" y1="10.8" x2="7" y2="13.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="0.5" y1="7" x2="3.2" y2="7" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="10.8" y1="7" x2="13.5" y2="7" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="logo-name">Hit Ops</span>
+  </div>
+  <div class="logo-divider"></div>
+  <span class="logo-sub">SAM.gov Opportunity Intelligence</span>
+  <div class="header-right">
+    <div class="badge-live"><span class="dot-pulse"></span> Live</div>
+  </div>
+</header>
+
+<!-- MISSION PICKER -->
+<div id="missionView" style="display:flex;justify-content:center;width:100%;">
+  <div class="mission-wrap">
+    <div class="kicker">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.2"/><path d="M5 3v2.4l1.4 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Hit Ops
+    </div>
+    <h1 class="setup-h1">Select a <em>Search Mission</em></h1>
+    <p class="setup-desc">Choose which type of federal opportunities to scan and analyze. Each mission uses a dedicated keyword set and AI categorization prompt.</p>
+
+    <div class="mission-grid">
+
+      <div class="mission-card mc-tak" onclick="selectMission('tak')">
+        <div class="mc-icon">◈</div>
+        <div class="mc-title">TAK Capability</div>
+        <div class="mc-desc">Find opportunities to build or support ATAK, TAK Server, TAK X, and WinTAK ecosystems.</div>
+        <div class="mc-keywords">
+          <span class="chip c-blue" style="font-size:10px;">ATAK</span>
+          <span class="chip c-blue" style="font-size:10px;">TAK Server</span>
+          <span class="chip c-blue" style="font-size:10px;">TAK X</span>
+          <span class="chip c-blue" style="font-size:10px;">WinTAK</span>
+          <span class="chip c-muted" style="font-size:10px;">+4 more</span>
+        </div>
+        <div class="mc-cta">
+          Select
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="mission-card mc-pace" onclick="selectMission('pace')">
+        <div class="mc-icon">⬡</div>
+        <div class="mc-title">Network / PACE</div>
+        <div class="mc-desc">Find opportunities for network improvements, PACE planning, automated PACE, and data optimization.</div>
+        <div class="mc-keywords">
+          <span class="chip c-teal" style="font-size:10px;">PACE</span>
+          <span class="chip c-teal" style="font-size:10px;">Automated PACE</span>
+          <span class="chip c-teal" style="font-size:10px;">Network Optimization</span>
+          <span class="chip c-teal" style="font-size:10px;">Data Pathway Automation</span>
+          <span class="chip c-muted" style="font-size:10px;">+5 more</span>
+        </div>
+        <div class="mc-cta">
+          Select
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="mission-card mc-custom" onclick="selectMission('custom')">
+        <div class="mc-icon">✦</div>
+        <div class="mc-title">Custom Search</div>
+        <div class="mc-desc">Define your own keyword set to scan for any capability area — full control over what gets matched.</div>
+        <div class="mc-keywords" id="customPreviewChips">
+          <span class="chip c-muted" style="font-size:10px;">Add your own keywords →</span>
+        </div>
+        <div class="mc-cta">
+          Configure
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+    </div>
+    <div class="foot-note" style="margin-top:24px;">Want to preview? <a onclick="loadDemo('tak')">TAK demo</a> · <a onclick="loadDemo('pace')">Network/PACE demo</a></div>
+  </div>
+</div>
+
+<!-- SETUP (scan config) -->
+<div id="setupView" style="display:none;justify-content:center;width:100%;">
+  <div class="setup-wrap">
+
+    <button class="back-btn" onclick="showMissionPicker()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M10.5 6.5h-8M5.5 3.5l-3 3 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Change mission
+    </button>
+
+    <div class="kicker" id="setupKicker">TAK Capability</div>
+    <h1 class="setup-h1" id="setupTitle">Scan SAM.gov for <em>TAK Opportunities</em></h1>
+    <p class="setup-desc" id="setupDesc">Upload a SAM.gov data export or connect via API key. Claude will filter, analyze, and categorize every relevant opportunity automatically.</p>
+
+    <div class="card">
+      <!-- Tab switcher -->
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('file',this)">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 1.5h5.5L10 4v6.5H2V1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 1.5V4H10" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+          Data File Upload
+        </button>
+        <button class="tab-btn" onclick="switchTab('api',this)">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Live API
+        </button>
+      </div>
+
+      <!-- FILE TAB -->
+      <div class="tab-pane active" id="tabFile">
+        <!-- Step 1: Download -->
+        <div style="margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:10px;">Step 1 — Get the data file</div>
+          <a href="https://sam.gov/data-services/Contract%20Opportunities/datagov?privacy=Public"
+             target="_blank"
+             id="samDownloadBtn"
+             style="display:flex;align-items:center;justify-content:space-between;gap:12px;
+                    background:rgba(138,180,248,0.07);border:1px solid rgba(138,180,248,0.28);
+                    border-radius:var(--r-lg);padding:14px 18px;text-decoration:none;
+                    transition:background 0.15s,border-color 0.15s,transform 0.1s;"
+             onmouseover="this.style.background='rgba(138,180,248,0.13)';this.style.borderColor='rgba(138,180,248,0.5)';this.style.transform='translateY(-1px)'"
+             onmouseout="this.style.background='rgba(138,180,248,0.07)';this.style.borderColor='rgba(138,180,248,0.28)';this.style.transform='none'">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;border-radius:var(--r);background:var(--accent-container);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="var(--accent-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12v1a2 2 0 002 2h8a2 2 0 002-2v-1" stroke="var(--accent-light)" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <div style="font-family:var(--display);font-size:14px;font-weight:500;color:var(--text-1);letter-spacing:0;">Download Contract Opportunities CSV</div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:2px;letter-spacing:0.01em;">sam.gov · Public export · Full dataset · Opens download in new tab</div>
+              </div>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;"><path d="M2 2h10M12 2v10M12 2L4 10" stroke="var(--accent-light)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <!-- Step 2: Upload -->
+        <div style="font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:10px;">Step 2 — Upload the downloaded file</div>
+
+        <div class="drop-zone" id="dropZone"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)">
+          <input type="file" id="fileInput" accept=".json,.csv,.JSON,.CSV" onchange="handleFileSelect(event)"/>
+          <div class="drop-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v12M7 7l4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="drop-title">Drop the CSV here or click to browse</div>
+          <div class="drop-sub">Once downloaded, drag <strong>ContractOpportunitiesFullCSV.csv</strong> here</div>
+          <div class="drop-formats"><span class="chip c-muted">CSV</span><span class="chip c-muted">JSON</span></div>
+        </div>
+
+        <div class="file-loaded" id="fileLoaded">
+          <div class="file-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 2v3h3" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="file-name" id="fileNameLabel">—</div>
+            <div class="file-meta" id="fileMetaLabel">—</div>
+          </div>
+          <button class="file-clear" onclick="clearFile()" title="Remove file">×</button>
+        </div>
+
+        <div style="height:16px;"></div>
+
+        <!-- Custom keyword input — shown in file tab when custom mission active -->
+        <div id="customFileKwSection" style="display:none;">
+          <div class="hr"></div>
+          <div class="field" style="margin-bottom:0;">
+            <div class="field-lbl">
+              <span>Search keywords</span>
+              <span id="customKwCount" style="color:var(--text-3);font-weight:400;">0 added</span>
+            </div>
+            <div class="tag-input-wrap" id="tagInputWrap">
+              <div id="customTagList" style="display:contents;"></div>
+              <input
+                id="customTagInput"
+                class="tag-input-field"
+                placeholder="Type a keyword, press Enter or , to add…"
+                autocomplete="off"
+                autocapitalize="none"
+                spellcheck="false"
+              />
+            </div>
+            <div class="tag-hint">Press <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">Enter</kbd> or <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">,</kbd> to add · Backspace to remove last · Matching is case-insensitive</div>
+          </div>
+          <div style="height:16px;"></div>
+        </div>
+
+        <button class="btn-primary" id="scanBtnFile" onclick="startFileScan()" disabled>Analyze File</button>
+        <div id="errBoxFile" class="err-box"></div>
+      </div>
+
+      <!-- API TAB -->
+      <div class="tab-pane" id="tabApi">
+        <div class="info-box" style="margin-bottom:20px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span>The SAM.gov API key is <strong style="color:var(--text-1);">free</strong> — sign in at sam.gov → User Account → Public API Key. <strong style="color:var(--amber);">⚠ Individual keys have a ~10 request/day limit</strong> — one scan uses 1 request per keyword. For unlimited scanning use the <strong>Data File Upload</strong> tab instead.</span>
+        </div>
+        <div class="field">
+          <div class="field-lbl">
+            <span>SAM.gov API Key</span>
+            <a href="https://sam.gov/profile/details" target="_blank">Get free key ↗</a>
+          </div>
+          <input type="password" id="samApiKey" class="input" placeholder="Paste your SAM.gov public API key…" autocomplete="off"/>
+        </div>
+        <div class="hr"></div>
+        <div class="field" style="margin-bottom:0;">
+          <div class="field-lbl"><span>Active keywords</span></div>
+          <div class="chips" id="apiKeywordChips"></div>
+        </div>
+
+        <!-- Custom mission: show keyword summary + link back to file tab to edit -->
+        <div id="customKeywordSection" style="display:none;">
+          <div class="hr"></div>
+          <div class="field" style="margin-bottom:0;">
+            <div class="field-lbl"><span>Your keywords</span></div>
+            <div class="chips" id="customApiSummaryChips" style="margin-bottom:8px;"></div>
+            <div class="tag-hint">Keywords are shared between both tabs. Switch to <a style="color:var(--accent-light);cursor:pointer;" onclick="switchTab('file',document.querySelector('.tab-btn'))">Data File Upload</a> to add or remove keywords.</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <button class="btn-primary" id="scanBtnApi" onclick="startApiScan()">Start Live Scan</button>
+        <div id="errBoxApi" class="err-box"></div>
+      </div>
+
+    </div>
+
+    <div class="foot-note">Want to preview? <a onclick="loadDemo(S.mission)">Load demo data</a></div>
+
+    <div style="margin-top:20px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center;">
+      <div style="font-size:11px;color:var(--text-3);letter-spacing:0.04em;text-transform:uppercase;font-weight:600;margin-bottom:2px;">Download SAM.gov Data</div>
+      <a href="https://sam.gov/data-services/Contract%20Opportunities/datagov?privacy=Public" target="_blank"
+         style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--accent-light);text-decoration:none;padding:6px 14px;border:1px solid rgba(138,180,248,0.22);border-radius:var(--r-full);background:rgba(138,180,248,0.06);transition:background 0.15s,border-color 0.15s;"
+         onmouseover="this.style.background='rgba(138,180,248,0.12)';this.style.borderColor='rgba(138,180,248,0.45)'"
+         onmouseout="this.style.background='rgba(138,180,248,0.06)';this.style.borderColor='rgba(138,180,248,0.22)'">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v6M3 5l2.5 2.5L8 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 9h9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Contract Opportunities — Public Export
+      </a>
+      <a href="https://sam.gov/data-services" target="_blank"
+         style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-2);text-decoration:none;padding:6px 14px;border:1px solid var(--border-md);border-radius:var(--r-full);background:transparent;transition:background 0.15s,border-color 0.15s,color 0.15s;"
+         onmouseover="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='var(--border-hi)';this.style.color='var(--text-1)'"
+         onmouseout="this.style.background='transparent';this.style.borderColor='var(--border-md)';this.style.color='var(--text-2)'">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 2h7M9 2v7M9 2L3.5 7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        SAM.gov Data Services
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- SCANNING -->
+<div id="scanView" class="scan-wrap">
+  <div class="scan-icon-ring">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <circle cx="11" cy="11" r="9" stroke="var(--accent-light)" stroke-width="1.4"/>
+      <circle cx="11" cy="11" r="5" stroke="var(--accent-light)" stroke-width="1" stroke-dasharray="2 2"/>
+      <circle cx="11" cy="11" r="1.5" fill="var(--accent-light)"/>
+    </svg>
+  </div>
+  <div class="scan-h" id="scanHeading">Processing file…</div>
+  <div class="scan-sub" id="scanSubheading">Filtering and analyzing TAK-related opportunities</div>
+  <div class="scan-card-wrap">
+    <div class="scan-card">
+      <div class="scan-row">
+        <span class="scan-lbl">Progress</span>
+        <span class="scan-pct" id="pctLbl">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+      <div class="scan-msg" id="scanMsg">Initializing…</div>
+      <div class="scan-detail" id="scanDetail"></div>
+    </div>
+    <div class="scan-card" style="padding:16px 18px;">
+      <div class="scan-lbl" style="margin-bottom:9px;">Operation log</div>
+      <div class="log-scroll" id="logBox"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dash">
+  <div class="dash-inner">
+    <div class="dash-top">
+      <div>
+        <div class="dash-eyebrow" id="dashEyebrow">Intelligence Report</div>
+        <div class="dash-h" id="dashTitle">TAK Capability Opportunities</div>
+        <div class="dash-meta" id="dashMeta"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-ghost" onclick="showMissionPicker()" style="color:var(--text-3);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M6 3v3l2 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Switch mission
+        </button>
+        <button class="btn-ghost" onclick="resetScan()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 6A5 5 0 0110.5 3M11 6A5 5 0 011.5 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M9.5 1l1 2-2 .5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 11l-1-2 2-.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          New scan
+        </button>
+      </div>
+    </div>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div class="sec-label">Match confidence</div>
+    <div class="match-grid" id="matchGrid"></div>
+    <div class="sec-label" id="catSectionLabel">Capability categories</div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drw-hd">
+    <div class="drw-top">
+      <div class="drw-title" id="drwTitle"></div>
+      <button class="icon-btn" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="filter-pills" id="filterPills"></div>
+  </div>
+  <div class="drw-body" id="drwBody"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-scrim" id="modalScrim" onclick="handleScrim(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="modalTitle"></div>
+      <button class="icon-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONSTANTS — DUAL MISSION
+// ─────────────────────────────────────────────
+
+const MISSIONS = {
+  tak: {
+    label: "TAK Capability",
+    kicker: "Hit Ops Intelligence",
+    title: "TAK Capability Opportunities",
+    scanHeading: "Scanning for TAK Opportunities…",
+    scanSub: "Filtering and analyzing ATAK / TAK ecosystem opportunities",
+    meta: "TAK opportunities",
+    catLabel: "TAK capability categories",
+    fileKeywords: [
+      "atak",
+      "tak server",
+      "tak x",
+      "wintak",
+      "team awareness kit",
+      "android team awareness kit",
+      "tactical awareness kit",
+      "tak plugin",
+      "tak client",
+      "tak enterprise",
+      "cursor on target"
+    ],
+    apiKeywords: ["ATAK","TAK Server","TAK X","WinTAK","Team Awareness Kit","Android Team Awareness Kit"],
+    chipColor: "c-blue",
+    claudePrompt: (slim) => `Classify these US federal contract opportunities for the TAK ecosystem (ATAK, TAK Server, TAK X, WinTAK). Return ONLY a raw JSON array — no markdown, no explanation.
+
+Each object:
+- "id": noticeId string
+- "category": exactly one of "Software" | "Hardware" | "Personnel" | "Purchase Equipment"
+  Software = development/engineering/integration/licensing/firmware/app dev
+  Hardware = physical devices/radios/tablets/wearables/servers (physical)/sensors
+  Personnel = staffing/training/instruction/support/program management
+  Purchase Equipment = COTS procurement/off-the-shelf orders
+- "subcategory": e.g. "Mobile App Dev", "Plugin Development", "TAK Server Integration", "Backend/API Development", "Systems Integration", "Security & Crypto", "Tactical Radios", "ATAK Devices & Tablets", "Server Infrastructure", "Wearable Sensors", "TAK Operator Training", "Systems Administration", "Curriculum Development", "Program Management", "COTS Software Licenses", "End User Devices", "Tactical Accessories"
+- "tak_types": array using "ATAK" | "TAK Server" | "TAK X" | "WinTAK" | "General TAK"
+- "aiml_required": boolean — mentions AI, ML, machine learning, neural networks, computer vision, NLP, predictive analytics, data science
+- "summary": 1-2 plain sentences describing what is needed
+- "relevance": 1-10 (10=explicitly TAK-focused)
+
+${JSON.stringify(slim)}`
+  },
+  pace: {
+    label: "Network / PACE",
+    kicker: "Network & PACE Intelligence",
+    title: "Network / PACE Opportunities",
+    scanHeading: "Scanning for Network / PACE Opportunities…",
+    scanSub: "Filtering and analyzing PACE and network optimization opportunities",
+    meta: "Network/PACE opportunities",
+    catLabel: "Network/PACE capability categories",
+    fileKeywords: [
+      // PACE planning & automation
+      "pace plan", "pace planning", "pace communication",
+      "primary alternate contingency emergency",
+      "automated pace", "pace automation",
+      "communication plan", "comms plan", "contingency communication",
+      // Network optimization & data pathways
+      "network optimization", "network efficiency",
+      "data path", "data pathway", "automated data",
+      "path optimization", "route optimization", "dynamic routing",
+      "traffic optimization", "bandwidth optimization",
+      "quality of service", "qos", "traffic prioritization",
+      "data flow automation", "network automation",
+      "autonomous routing", "self-healing network",
+      "resilient communications", "communications resilience",
+      // Data management in comms context
+      "data aggregation", "data fusion", "data pipeline",
+      "edge processing", "edge compute", "edge network",
+      "data transport", "secure data transport"
+    ],
+    apiKeywords: [
+      "PACE plan",
+      "automated PACE",
+      "network optimization",
+      "data pathway",
+      "path optimization",
+      "communications resilience",
+      "network automation"
+    ],
+    chipColor: "c-teal",
+    claudePrompt: (slim) => `Classify these US federal contract opportunities for PACE (Primary, Alternate, Contingency, Emergency) communications planning and network/data pathway optimization. Return ONLY a raw JSON array — no markdown, no explanation.
+
+Focus: PACE plan development, PACE automation tools, network path optimization, automated data routing, traffic management, communications resilience, and edge data processing. NOT general network hardware procurement or waveform research.
+
+Each object:
+- "id": noticeId string
+- "category": exactly one of "Software" | "Hardware" | "Personnel" | "Purchase Equipment"
+  Software = PACE planning tools/automation/network optimization software/data routing/traffic management/QoS engines
+  Hardware = devices that implement optimized data pathways or PACE switching (routers with automation, edge compute nodes)
+  Personnel = PACE planners/network optimization engineers/comms automation specialists/training
+  Purchase Equipment = COTS tools/software licenses specifically for PACE or network optimization
+- "subcategory": e.g. "PACE Plan Development", "Automated PACE", "PACE Automation Tool", "Network Path Optimization", "Dynamic Routing", "Data Flow Automation", "Traffic Prioritization / QoS", "Communications Resilience", "Edge Data Processing", "Network Optimization Software", "PACE Training", "Network Automation Engineering", "PACE Planner Support", "Bandwidth Optimization", "Secure Data Transport"
+- "tak_types": array using "PACE" | "Automated PACE" | "Network Optimization" | "Data Pathway Automation" | "Traffic Management" | "Communications Resilience" | "Edge Processing" (use all that apply, or ["General PACE"] if unclear)
+- "aiml_required": boolean — mentions AI, ML, machine learning, automated decision making, predictive analytics, autonomous systems, intelligent routing
+- "summary": 1-2 plain sentences describing what is needed
+- "relevance": 1-10 (10=explicitly PACE automation or data pathway optimization)
+
+${JSON.stringify(slim)}`
+  },
+  custom: {
+    label: "Custom Search",
+    kicker: "Custom Intelligence",
+    title: "Custom Capability Opportunities",
+    scanHeading: "Scanning with Custom Keywords…",
+    scanSub: "Filtering and analyzing opportunities using your keyword set",
+    meta: "custom opportunities",
+    catLabel: "Capability categories",
+    // fileKeywords and apiKeywords are populated dynamically from user input
+    fileKeywords: [],
+    apiKeywords: [],
+    chipColor: "c-green",
+    claudePrompt: (slim) => `Classify these US federal government contract opportunities. Return ONLY a raw JSON array — no markdown, no explanation.
+
+Each object:
+- "id": noticeId string
+- "category": exactly one of "Software" | "Hardware" | "Personnel" | "Purchase Equipment"
+  Software = development/engineering/integration/licensing/app dev/coding/SaaS
+  Hardware = physical devices/equipment/sensors/servers/radios/peripherals
+  Personnel = staffing/training/instruction/support/consulting/program management
+  Purchase Equipment = COTS procurement/off-the-shelf orders/buying equipment/licenses
+- "subcategory": specific descriptive type in 3-5 words
+- "tak_types": array of capability tags that best describe what is being procured (e.g. "Systems Integration", "Training", "Software Development", "Hardware Procurement") — use 1-3 tags
+- "aiml_required": boolean — does the opportunity explicitly require AI, ML, machine learning, neural networks, computer vision, NLP, or autonomous systems?
+- "summary": 1-2 plain sentences describing what capability is needed
+- "relevance": 1-10 (10=directly and explicitly matches the evident capability focus, 1=tangentially related)
+
+${JSON.stringify(slim)}`
+  }
+};
+
+const CAT = {
+  "Software":          { cls:"cc-sw", icon:"⬡", desc:"Development, integration, licensing & engineering services", chipCls:"c-blue" },
+  "Hardware":          { cls:"cc-hw", icon:"▣", desc:"Physical devices, radios, servers & peripherals",           chipCls:"c-amber" },
+  "Personnel":         { cls:"cc-pn", icon:"◉", desc:"Staffing, training, instruction & technical support",        chipCls:"c-muted" },
+  "Purchase Equipment":{ cls:"cc-pe", icon:"◆", desc:"COTS procurement, off-the-shelf hardware & software",        chipCls:"c-green" }
+};
+
+let S = { cats:{}, all:[], activeCat:null, activeMatchLevel:null, loadedFile:null, parsedRecords:null, mission:"tak" };
+Object.keys(CAT).forEach(c => { S.cats[c]=[]; });
+
+// Custom keyword tags state
+let customTags = [];
+
+// ─────────────────────────────────────────────
+// TAG INPUT — CUSTOM MISSION
+// ─────────────────────────────────────────────
+
+function addTag(raw) {
+  const val = raw.trim().toLowerCase().replace(/,/g,"");
+  if (!val || val.length < 2) return;
+  if (customTags.includes(val)) return; // no dupes
+  customTags.push(val);
+  renderTags();
+  syncCustomMission();
+}
+
+function removeTag(idx) {
+  customTags.splice(idx, 1);
+  renderTags();
+  syncCustomMission();
+}
+
+function renderTags() {
+  const list = document.getElementById("customTagList");
+  if (!list) return;
+  list.innerHTML = customTags.map((t, i) => `
+    <span class="tag-chip">
+      ${esc(t)}
+      <button class="tag-chip-remove" onclick="removeTag(${i})" title="Remove">×</button>
+    </span>`).join("");
+
+  const countEl = document.getElementById("customKwCount");
+  if (countEl) countEl.textContent = customTags.length === 0 ? "0 added" : `${customTags.length} keyword${customTags.length !== 1 ? "s" : ""}`;
+
+  // Update API tab summary chips
+  const summaryEl = document.getElementById("customApiSummaryChips");
+  if (summaryEl) {
+    if (customTags.length === 0) {
+      summaryEl.innerHTML = `<span class="chip c-muted" style="font-size:11px;">No keywords yet — add them in the Data File Upload tab</span>`;
+    } else {
+      summaryEl.innerHTML = customTags.map(t => `<span class="chip c-green" style="font-size:11px;">${esc(t)}</span>`).join("");
+    }
+  }
+
+  // Update mission picker card preview
+  updateCustomPreview();
+
+  // Enable scan buttons if tags exist
+  const fileBtn = document.getElementById("scanBtnFile");
+  if (fileBtn && S.mission === "custom") fileBtn.disabled = customTags.length === 0;
+}
+
+function updateCustomPreview() {
+  const el = document.getElementById("customPreviewChips");
+  if (!el) return;
+  if (customTags.length === 0) {
+    el.innerHTML = `<span class="chip c-muted" style="font-size:10px;">Add your own keywords →</span>`;
+  } else {
+    const show = customTags.slice(0, 4);
+    const more = customTags.length - show.length;
+    el.innerHTML = show.map(t => `<span class="chip c-green" style="font-size:10px;">${esc(t)}</span>`).join("") +
+      (more > 0 ? `<span class="chip c-muted" style="font-size:10px;">+${more} more</span>` : "");
+  }
+}
+
+function syncCustomMission() {
+  // Keep MISSIONS.custom in sync with the live tag list
+  MISSIONS.custom.fileKeywords = [...customTags];
+  MISSIONS.custom.apiKeywords  = customTags.map(t => t.charAt(0).toUpperCase() + t.slice(1));
+}
+
+function initTagInput() {
+  const input = document.getElementById("customTagInput");
+  if (!input || input._bound) return;
+  input._bound = true;
+
+  // Click anywhere on the wrap focuses the input
+  const wrap = document.getElementById("tagInputWrap");
+  if (wrap) wrap.addEventListener("click", () => input.focus());
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const val = input.value;
+      input.value = "";
+      val.split(",").forEach(v => addTag(v));
+    } else if (e.key === "Backspace" && input.value === "" && customTags.length > 0) {
+      removeTag(customTags.length - 1);
+    }
+  });
+
+  input.addEventListener("paste", e => {
+    e.preventDefault();
+    const pasted = (e.clipboardData || window.clipboardData).getData("text");
+    pasted.split(/[,\n]+/).forEach(v => addTag(v));
+  });
+
+  input.addEventListener("blur", () => {
+    if (input.value.trim()) { addTag(input.value); input.value = ""; }
+  });
+}
+
+// ─────────────────────────────────────────────
+// MISSION SELECTION
+// ─────────────────────────────────────────────
+
+function selectMission(m) {
+  S.mission = m;
+  const cfg = MISSIONS[m];
+
+  // Update setup header
+  document.getElementById("setupKicker").textContent = cfg.kicker;
+  document.getElementById("setupTitle").innerHTML =
+    m === "tak"    ? 'Scan SAM.gov for <em>TAK Opportunities</em>' :
+    m === "pace"   ? 'Scan SAM.gov for <em>Network / PACE Opportunities</em>' :
+                     'Scan SAM.gov with <em>Custom Keywords</em>';
+  document.getElementById("setupDesc").textContent =
+    m === "custom"
+      ? "Add your own search keywords below, then upload a SAM.gov data export or connect via API key. Hit Ops will filter and categorize every matching opportunity."
+      : "Upload a SAM.gov data export or connect via API key. Hit Ops will filter and categorize every relevant opportunity automatically.";
+
+  // Restore file UI if a file is already loaded from a previous mission
+  if (S.loadedFile && S.parsedRecords) {
+    document.getElementById("fileLoaded").classList.add("show");
+    document.getElementById("fileNameLabel").textContent = S.loadedFile.name;
+    document.getElementById("fileMetaLabel").textContent =
+      formatBytes(S.loadedFile.size) + " · " + S.loadedFile.name.split(".").pop().toUpperCase() +
+      " · " + S.parsedRecords.length.toLocaleString() + " records loaded";
+    document.getElementById("dropZone").style.display = "none";
+  }
+
+  // Show/hide custom keyword editor
+  const customFileSection = document.getElementById("customFileKwSection");
+  const customApiSection  = document.getElementById("customKeywordSection");
+  const apiChipsField     = document.getElementById("apiKeywordChips").closest(".field");
+  const customFileNote    = document.getElementById("customFileKwNote");
+
+  if (m === "custom") {
+    if (customFileSection) customFileSection.style.display = "block";
+    if (customApiSection)  customApiSection.style.display  = "block";
+    if (apiChipsField)     apiChipsField.style.display     = "none";
+    if (customFileNote)    customFileNote.style.display    = "none";
+    const btn = document.getElementById("scanBtnFile");
+    if (btn) btn.disabled = customTags.length === 0 || !S.loadedFile;
+    initTagInput();
+    renderTags();
+  } else {
+    if (customFileSection) customFileSection.style.display = "none";
+    if (customApiSection)  customApiSection.style.display  = "none";
+    if (apiChipsField)     apiChipsField.style.display     = "block";
+    if (customFileNote)    customFileNote.style.display    = "none";
+    document.getElementById("apiKeywordChips").innerHTML =
+      cfg.apiKeywords.map(k => `<span class="chip ${cfg.chipColor}">${k}</span>`).join("");
+    const btn = document.getElementById("scanBtnFile");
+    if (btn) btn.disabled = !S.loadedFile;
+  }
+
+  showView("setup");
+  tryBindApiKey();
+}
+
+function showMissionPicker() {
+  closeDrawer(); closeModal();
+  Object.keys(CAT).forEach(c => { S.cats[c]=[]; });
+  S.all=[];
+  // Do NOT clear loadedFile or parsedRecords — persist across mission switches
+  document.getElementById("logBox").innerHTML="";
+  setProg(0,"","");
+  showView("mission");
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  const el = document.getElementById("tab" + name.charAt(0).toUpperCase() + name.slice(1));
+  if (el) el.classList.add("active");
+}
+
+// samApiKey listener — element only exists after selectMission shows setupView
+function tryBindApiKey() {
+  const el = document.getElementById("samApiKey");
+  if (el && !el._bound) { el.addEventListener("keydown", e => { if(e.key==="Enter") startApiScan(); }); el._bound=true; }
+}
+
+// ─────────────────────────────────────────────
+// FILE HANDLING
+// ─────────────────────────────────────────────
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById("dropZone").classList.add("drag-over");
+}
+function handleDragLeave(e) {
+  document.getElementById("dropZone").classList.remove("drag-over");
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById("dropZone").classList.remove("drag-over");
+  const file = e.dataTransfer?.files?.[0];
+  if (file) processFile(file);
+}
+function handleFileSelect(e) {
+  const file = e.target.files?.[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  const ext = file.name.split(".").pop().toLowerCase();
+
+  // ZIP files are the most common user mistake — SAM.gov bulk downloads are zipped
+  if (ext === "zip" || ext === "gz") {
+    showErr("errBoxFile",
+      `<strong>ZIP file detected.</strong> SAM.gov bulk downloads arrive as a ZIP archive.<br><br>` +
+      `Please extract the ZIP first, then upload the <strong>.json</strong> or <strong>.csv</strong> file inside it.`
+    );
+    return;
+  }
+
+  if (!["json","csv"].includes(ext)) {
+    showErr("errBoxFile", `Unsupported file type ".${ext}". Please upload a <strong>.json</strong> or <strong>.csv</strong> file from SAM.gov.`);
+    return;
+  }
+
+  S.loadedFile = file;
+  document.getElementById("fileNameLabel").textContent = file.name;
+  document.getElementById("fileMetaLabel").textContent = formatBytes(file.size) + " · " + ext.toUpperCase();
+  document.getElementById("fileLoaded").classList.add("show");
+  document.getElementById("dropZone").style.display = "none";
+  document.getElementById("scanBtnFile").disabled = false;
+  hideErr("errBoxFile");
+
+  // Sniff first 4KB for field names (non-blocking, fires after the UI updates)
+  const sniffReader = new FileReader();
+  sniffReader.onload = ev => {
+    try {
+      const sample = ev.target.result;
+      if (ext === "csv") {
+        // Use proper CSV row parsing for the header
+        const firstLine = sample.split(/\r?\n/)[0];
+        const headers = parseCSVRow(firstLine).map(h => h.replace(/"/g,"").trim().toLowerCase());
+        // Warn if this looks like it has no recognizable title field
+        const hasTitle = headers.some(h => h.includes("title") || h.includes("subject") || h.includes("notice"));
+        if (!hasTitle && headers.length > 2) {
+          showErr("errBoxFile",
+            `⚠ Header check: Column names look unusual for a SAM.gov opportunities export.<br>` +
+            `Found: <em>${headers.slice(0,6).join(", ")}</em>…<br><br>` +
+            `Expected columns like "Title", "NoticeId". Check you're uploading Contract Opportunities (not Awards or Grants).`
+          );
+        }
+      } else if (ext === "json") {
+        // Quick sanity check on JSON structure
+        const trimmed = sample.trim();
+        if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) {
+          showErr("errBoxFile", `⚠ This file doesn't start with { or [ — it may not be valid JSON. Check the file and try again.`);
+        }
+      }
+    } catch(_) {}
+  };
+  sniffReader.readAsText(file.slice(0, 4096), "utf-8");
+}
+
+function clearFile() {
+  S.loadedFile = null;
+  S.parsedRecords = null;
+  document.getElementById("fileInput").value = "";
+  document.getElementById("fileLoaded").classList.remove("show");
+  document.getElementById("dropZone").style.display = "";
+  document.getElementById("scanBtnFile").disabled = true;
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + " KB";
+  return (bytes/1024/1024).toFixed(1) + " MB";
+}
+
+// ─────────────────────────────────────────────
+// FILE SCAN FLOW
+// ─────────────────────────────────────────────
+
+async function startFileScan() {
+  if (!S.loadedFile) { showErr("errBoxFile","No file selected."); return; }
+
+  if (S.mission === "custom") {
+    syncCustomMission();
+    if (MISSIONS.custom.fileKeywords.length === 0) {
+      showErr("errBoxFile","Add at least one keyword in the Search keywords field above before analyzing.");
+      return;
+    }
+  }
+
+  hideErr("errBoxFile");
+  showView("scan");
+  Object.keys(CAT).forEach(c => { S.cats[c]=[]; });
+  S.all = [];
+
+  try {
+    const cfg = MISSIONS[S.mission];
+    document.getElementById("scanHeading").textContent = cfg.scanHeading;
+    document.getElementById("scanSubheading").textContent = cfg.scanSub;
+
+    let records;
+
+    if (S.parsedRecords) {
+      // Reuse already-parsed records from a previous scan
+      log(`Reusing ${S.parsedRecords.length.toLocaleString()} records from ${S.loadedFile.name}`, "ok");
+      setProg(28, `Filtering for ${cfg.label} keywords…`);
+      await sleep(20);
+      records = S.parsedRecords;
+    } else {
+      // First time — read and parse the file
+      const ext = S.loadedFile.name.split(".").pop().toLowerCase();
+      const sizeMB = (S.loadedFile.size / 1024 / 1024).toFixed(1);
+
+      log(`File: ${S.loadedFile.name} (${sizeMB} MB)`, "info");
+      setProg(3, `Reading ${sizeMB} MB file…`);
+      await sleep(20);
+
+      const text = await readFile(S.loadedFile);
+      log("File loaded into memory", "ok");
+      setProg(13, "Parsing records…");
+
+      if (ext === "json") {
+        records = await parseJSON(text);
+      } else if (ext === "csv") {
+        records = await parseCSV(text);
+      } else {
+        throw new Error("Unsupported file type. Please use JSON or CSV.");
+      }
+
+      if (records.length === 0) {
+        throw new Error(
+          "No records found after parsing.\n\n" +
+          "Common causes:\n" +
+          "• The file is a ZIP archive — extract it first\n" +
+          "• The file is empty or malformed\n" +
+          "• This is a Contract Awards or Grants file rather than Contract Opportunities"
+        );
+      }
+
+      // Cache for reuse across missions
+      S.parsedRecords = records;
+
+      // Update file meta to show record count
+      document.getElementById("fileMetaLabel").textContent =
+        formatBytes(S.loadedFile.size) + " · " + ext.toUpperCase() +
+        " · " + records.length.toLocaleString() + " records loaded";
+
+      log(`${records.length.toLocaleString()} records parsed and cached`, "ok");
+      setProg(28, `Filtering for ${cfg.label} keywords…`);
+      await sleep(0);
+    }
+
+    // Filter — chunked async scan across all field values
+    const matched = await filterRelevant(records, cfg.fileKeywords);
+
+    if (matched.length === 0) {
+      // Show a sample of what fields exist to help debug
+      const sampleKeys = records.length > 0 ? Object.keys(records[0]).slice(0, 10).join(", ") : "none";
+      throw new Error(
+        `No ${cfg.label} opportunities matched in ${records.length.toLocaleString()} records.\n\n` +
+        `Sample fields found: ${sampleKeys}\n\n` +
+        `Possible causes:\n` +
+        `• This is a different file type (Awards, Grants, etc.) — make sure you're downloading "Contract Opportunities"\n` +
+        `• The opportunity titles/descriptions don't contain the expected keywords\n` +
+        `• Try the Live API tab for a smaller, targeted search`
+      );
+    }
+
+    log(`${matched.length} matching opportunit${matched.length !== 1 ? "ies" : "y"} found`, "ok");
+    setProg(55, "Normalizing records…");
+    await sleep(20);
+
+    S.all = matched;
+    const normalized = matched.map(normalizeRecord);
+    log(`Normalized ${normalized.length} records`, "ok");
+
+    setProg(70, `Scoring ${normalized.length} records…`);
+    await sleep(20);
+
+    // Local scoring — no API calls, instant results
+    const analyzed = scoreLocally(normalized, S.mission);
+    log(`Scored ${analyzed.length} records locally`, "ok");
+    setProg(90, "Building report…");
+    await sleep(20);
+
+    // Merge scores back into normalized records
+    const merged = normalized.map(r => {
+      const a = analyzed.find(x => x.id === r.noticeId);
+      return { ...r, ...(a || fb(r)) };
+    });
+
+    Object.keys(CAT).forEach(c => { S.cats[c] = []; });
+    merged.forEach(o => {
+      const c = o.category;
+      if (c && S.cats[c]) S.cats[c].push(o);
+      else S.cats["Software"].push({ ...o, category: "Software" });
+    });
+
+    setProg(100, "Analysis complete");
+    log(`Report ready — ${merged.length} opportunities categorized`, "ok");
+    await sleep(500);
+    renderDash(merged.length, false, S.loadedFile.name);
+    showView("dashboard");
+
+  } catch(err) {
+    showView("setup");
+    showErr("errBoxFile", err.message.replace(/\n/g, "<br>"));
+  }
+}
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error("Could not read file — it may be corrupted or in an unsupported encoding."));
+    reader.readAsText(file, "utf-8");
+  });
+}
+
+// ─────────────────────────────────────────────
+// PARSERS — chunked to avoid main-thread freeze
+// ─────────────────────────────────────────────
+
+async function parseJSON(text) {
+  // JSON.parse is synchronous — yield first so the scan view renders
+  await sleep(20);
+  try {
+    const data = JSON.parse(text);
+    if (Array.isArray(data)) return data;
+    if (data.opportunitiesData && Array.isArray(data.opportunitiesData)) return data.opportunitiesData;
+    if (data.data && Array.isArray(data.data)) return data.data;
+    if (data.results && Array.isArray(data.results)) return data.results;
+    // Find any top-level array
+    for (const key of Object.keys(data)) {
+      if (Array.isArray(data[key]) && data[key].length > 0) return data[key];
+    }
+    return [];
+  } catch(e) {
+    throw new Error("Could not parse JSON. Make sure this is a valid SAM.gov opportunities export.\n\nDetail: " + e.message);
+  }
+}
+
+// Parse a single CSV row handling quoted fields
+function parseCSVRow(line) {
+  const fields = [];
+  let cur = "", inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuote && line[i+1] === '"') { cur += '"'; i++; }
+      else inQuote = !inQuote;
+    } else if (ch === ',' && !inQuote) {
+      fields.push(cur); cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  fields.push(cur);
+  return fields;
+}
+
+// Chunked CSV parser — scans the string without splitting into a full lines array
+async function parseCSV(text) {
+  const YIELD_EVERY = 50000; // yield every N chars to keep UI alive
+  const records = [];
+  let headers = null;
+  let pos = 0;
+  let rowCount = 0;
+  const len = text.length;
+
+  // Extract one CSV row starting at `pos`, returns { fields, nextPos }
+  function readRow(startPos) {
+    const fields = [];
+    let cur = "";
+    let inQ = false;
+    let i = startPos;
+    for (; i < len; i++) {
+      const ch = text[i];
+      if (ch === '"') {
+        if (inQ && text[i+1] === '"') { cur += '"'; i++; }
+        else inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        fields.push(cur); cur = "";
+      } else if ((ch === '\n' || ch === '\r') && !inQ) {
+        fields.push(cur);
+        // Skip \r\n pair
+        if (ch === '\r' && text[i+1] === '\n') i++;
+        return { fields, nextPos: i + 1 };
+      } else {
+        cur += ch;
+      }
+    }
+    if (cur || fields.length) fields.push(cur);
+    return { fields, nextPos: len };
+  }
+
+  // Read header row
+  const hdrResult = readRow(0);
+  if (hdrResult.fields.length < 2) throw new Error("CSV header row has fewer than 2 columns — this may not be a SAM.gov opportunities file.");
+  headers = hdrResult.fields.map(h => h.replace(/^"|"$/g,"").trim().toLowerCase().replace(/\s+/g,"_"));
+  pos = hdrResult.nextPos;
+
+  // Read data rows with periodic yields
+  let lastYield = 0;
+  while (pos < len) {
+    if (text[pos] === '\n' || text[pos] === '\r') { pos++; continue; }
+
+    const result = readRow(pos);
+    pos = result.nextPos;
+
+    if (result.fields.length > 1) {
+      const rec = {};
+      headers.forEach((h, idx) => { rec[h] = (result.fields[idx] || "").replace(/^"|"$/g,"").trim(); });
+      records.push(rec);
+      rowCount++;
+    }
+
+    // Yield periodically based on character position
+    if (pos - lastYield > YIELD_EVERY) {
+      lastYield = pos;
+      const pct = Math.round((pos / len) * 12);
+      setProg(14 + pct, `Parsing row ${rowCount.toLocaleString()}…`);
+      await sleep(0);
+    }
+  }
+
+  if (records.length === 0) throw new Error("CSV parsed successfully but no data rows were found.");
+  return records;
+}
+
+// ─────────────────────────────────────────────
+// RELEVANCE FILTER — chunked, word-boundary aware
+// ─────────────────────────────────────────────
+
+// Pre-compile keyword matchers for a mission's keyword list.
+// Each keyword is matched as a whole word (not inside a larger word).
+function buildMatchers(keywords) {
+  return keywords.map(kw => {
+    // Escape regex special chars in the keyword
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Wrap in word boundaries — \b works for alphanumeric edges.
+    // For keywords with spaces (e.g. "tak server") the spaces already
+    // act as boundaries, but we still anchor the start/end words.
+    return new RegExp("(?<![a-zA-Z0-9])" + escaped + "(?![a-zA-Z0-9])", "i");
+  });
+}
+
+async function filterRelevant(records, keywords) {
+  const CHUNK = 2000;
+  const matchers = buildMatchers(keywords);
+  const matched = [];
+
+  for (let i = 0; i < records.length; i++) {
+    const r = records[i];
+    const fields = Object.values(r)
+      .filter(v => v && typeof v === "string")
+      .join(" ");
+
+    if (matchers.some(rx => rx.test(fields))) matched.push(r);
+
+    if (i % CHUNK === 0 && i > 0) {
+      setProg(28 + Math.round((i / records.length) * 8), `Filtering… ${matched.length} matches so far`);
+      await sleep(0);
+    }
+  }
+  return matched;
+}
+
+// ─────────────────────────────────────────────
+// NORMALIZER — maps various SAM.gov field names to our schema
+// ─────────────────────────────────────────────
+
+function normalizeRecord(r) {
+  // Helper: check multiple possible keys on a record object
+  const pick = (...keys) => { for (const k of keys) { const v = r[k]; if (v !== undefined && v !== null && v !== "") return v; } return ""; };
+
+  // Title — API format and all known CSV column variants
+  const title = pick(
+    "title", "Title", "opportunityTitle", "opportunity_title",
+    "noticeTitle", "notice_title", "subject", "Subject"
+  ) || "Untitled";
+
+  // Notice ID — API: noticeId | CSV: NoticeId → noticeid after normalization
+  const noticeId = pick(
+    "noticeId", "notice_id", "noticeid", "NoticeId",
+    "id", "ID", "_id"
+  ) || ("GEN-" + Math.random().toString(36).slice(2,8).toUpperCase());
+
+  // Type — API: type | CSV: Type → type
+  const type = pick("type", "Type", "noticeType", "notice_type", "base_type", "baseType") || "";
+
+  // Posted date — API: postedDate | CSV: Posted Date → posted_date
+  const postedDate = pick(
+    "postedDate", "posted_date", "PostedDate",
+    "publishDate", "publish_date", "date", "Date"
+  ) || "";
+
+  // Organisation path — API: fullParentPathName | CSV: need to build from columns
+  const org = pick("fullParentPathName", "full_parent_path_name") ||
+    [
+      // CSV bulk export column names after normalization
+      pick("department/ind._agency", "department_ind._agency", "department", "Department", "department_name"),
+      pick("sub-tier", "sub_tier", "subtier", "Subtier", "sub_tier_name"),
+      pick("office", "Office", "office_name")
+    ].filter(Boolean).join(" > ") ||
+    pick("organizationName", "organization_name", "organization", "Organization", "affiliation", "Affiliation") || "";
+
+  // Description
+  const rawDesc = pick("description", "Description", "synopsis", "Synopsis", "desc");
+  const desc = typeof rawDesc === "string" && !rawDesc.startsWith("http") ? rawDesc : "";
+
+  // Solicitation number — API: solicitationNumber | CSV: Sol # → sol_#
+  const solNum = pick(
+    "solicitationNumber", "solicitation_number", "sol_#", "sol #", "Sol #",
+    "solNum", "sol_num", "solicitation", "SolicitationNumber"
+  ) || "";
+
+  // Link — API: uiLink | CSV: Link → link
+  const link = pick("uiLink", "ui_link", "link", "Link", "url", "URL", "additional_info_link") ||
+    (noticeId && !noticeId.startsWith("GEN-") ? `https://sam.gov/opp/${noticeId}/view` : "");
+
+  // NAICS / PSC
+  const naics = pick("naicsCode", "naics_code", "naics", "NAICS", "naics_code_desc") || "";
+  const psc   = pick("classificationCode", "classification_code", "psc_code", "fpds_code", "ClassificationCode") || "";
+
+  // Response deadline / end date
+  const responseDeadLine = pick(
+    "responseDeadLine", "response_deadline", "response_dead_line",
+    "rdl", "deadline", "due_date", "dueDate",
+    "archiveDate", "archive_date",
+    "inactive_date", "inactiveDate"
+  ) || "";
+
+  return { noticeId, title, type, postedDate, responseDeadLine, fullParentPathName: org, description: desc, solicitationNumber: solNum, uiLink: link, naicsCode: naics, classificationCode: psc };
+}
+
+// ─────────────────────────────────────────────
+// CLAUDE ANALYSIS
+// ─────────────────────────────────────────────
+
+// ─────────────────────────────────────────────
+// LOCAL SCORING ENGINE — no API calls
+// Categorizes and scores each record using
+// keyword patterns, NAICS codes, and field weights
+// ─────────────────────────────────────────────
+
+const SCORE_RULES = {
+  // Fields and their weight multipliers for relevance scoring
+  fieldWeights: { title: 3, description: 1.5, subcategory: 2, naics: 1, psc: 1 },
+
+  // AI/ML detection keywords
+  aimlKeywords: [
+    "artificial intelligence", "machine learning", "deep learning", "neural network",
+    "computer vision", "natural language processing", "nlp", "predictive analytics",
+    "autonomous", "ai/ml", " ai ", "ml model", "reinforcement learning",
+    "large language model", "llm", "generative ai", "data science"
+  ],
+
+  // Category detection by NAICS code ranges
+  naicsToCategory: {
+    // Software / IT services
+    software: ["541511","541512","541513","541519","541715","518","519","334614"],
+    // Hardware / manufacturing / electronics
+    hardware: ["334","335","336","541330","811","423430","423690","532490"],
+    // Personnel / staffing / training / consulting
+    personnel: ["541611","541612","541613","541618","541690","611","541990","561320","561110"],
+    // Professional services that could be either — use title signals
+  },
+
+  // PSC codes that strongly indicate category
+  pscToCategory: {
+    software:  ["D","7A","7B","7C","7D","7E"],   // ADP/IT services, software
+    hardware:  ["5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","58","59","61","62","65","66","67","69"],
+    personnel: ["U","V","B","Q","R"],              // education, training, support svcs
+    purchase:  ["66","58","59","70","74","75"]      // instruments, ADP equipment, office supplies
+  }
+};
+
+// Determine if a record requires AI/ML
+function detectAIML(r) {
+  const text = Object.values(r)
+    .filter(v => typeof v === "string")
+    .join(" ")
+    .toLowerCase();
+  return SCORE_RULES.aimlKeywords.some(kw => {
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp("(?<![a-zA-Z0-9])" + escaped + "(?![a-zA-Z0-9])", "i").test(text);
+  });
+}
+
+// Infer category from NAICS, PSC, notice type, and title/description signals
+function inferCategory(r, missionKeywords) {
+  const naics  = (r.naicsCode || r.naics || "").toString().trim();
+  const psc    = (r.classificationCode || r.psc_code || r.psc || "").toString().trim().toUpperCase();
+  const type   = (r.type || r.notice_type || "").toLowerCase();
+  const title  = (r.title || "").toLowerCase();
+  const desc   = (r.description || "").toLowerCase();
+  const text   = title + " " + desc;
+
+  // Notice type shortcuts
+  if (type.includes("award") && (type.includes("purchase") || type.includes("order"))) {
+    // Check if it's software/license or hardware
+    if (/licens|software|saas|subscription/.test(text)) return "Purchase Equipment";
+    if (/device|tablet|radio|hardware|equipment|unit|kit/.test(text)) return "Purchase Equipment";
+  }
+
+  // NAICS-based detection
+  if (naics) {
+    const n6 = naics.slice(0, 6);
+    const n3 = naics.slice(0, 3);
+    if (SCORE_RULES.naicsToCategory.software.some(c => n6.startsWith(c) || n3 === c.slice(0,3))) return "Software";
+    if (SCORE_RULES.naicsToCategory.hardware.some(c => n6.startsWith(c) || n3 === c.slice(0,3))) return "Hardware";
+    if (SCORE_RULES.naicsToCategory.personnel.some(c => n6.startsWith(c) || n3 === c.slice(0,3))) return "Personnel";
+  }
+
+  // PSC-based detection
+  if (psc) {
+    const p1 = psc.slice(0, 1);
+    const p2 = psc.slice(0, 2);
+    if (SCORE_RULES.pscToCategory.personnel.includes(p1)) return "Personnel";
+    if (SCORE_RULES.pscToCategory.software.includes(p1) || SCORE_RULES.pscToCategory.software.includes(p2)) return "Software";
+    if (SCORE_RULES.pscToCategory.hardware.includes(p1) || SCORE_RULES.pscToCategory.hardware.includes(p2)) return "Hardware";
+    if (SCORE_RULES.pscToCategory.purchase.includes(p2)) return "Purchase Equipment";
+  }
+
+  // Title/description keyword signals
+  if (/\b(develop|engineer|integrat|cod|software|app|platform|system|tool|solution|implement|program|api|sdk|plugin|firmware|cyber|cloud|devops|saas|licens)\b/.test(text)) return "Software";
+  if (/\b(train|instruct|teach|curriculum|course|educat|personnel|staffing|support|consult|advisor|analyst|specialist|manager|planner)\b/.test(text)) return "Personnel";
+  if (/\b(device|tablet|radio|hardware|equipment|sensor|camera|antenna|server|rack|switch|router|battery|mount|case|peripheral|component)\b/.test(text)) return "Hardware";
+  if (/\b(procure|purchas|buy|acquire|cots|off-the-shelf|commercial|supply|deliverable|item|unit|quantity)\b/.test(text)) return "Purchase Equipment";
+
+  return "Software"; // default
+}
+
+// Infer subcategory from title and description
+function inferSubcategory(r, category, mission) {
+  const text = ((r.title || "") + " " + (r.description || "")).toLowerCase();
+
+  if (mission === "tak") {
+    if (/plugin|plug-in/.test(text)) return "Plugin Development";
+    if (/mobile|android|ios|atak|app/.test(text)) return "Mobile App Dev";
+    if (/server|backend|api|federation/.test(text)) return "TAK Server Integration";
+    if (/train|instruct|curriculum|course/.test(text)) return "TAK Operator Training";
+    if (/radio|manet|wave|rf|comms|communication/.test(text)) return "Tactical Radios";
+    if (/tablet|device|handset|rugged/.test(text)) return "ATAK Devices & Tablets";
+    if (/sensor|camera|wearable|body/.test(text)) return "Wearable Sensors";
+    if (/integrat|system|fusion/.test(text)) return "Systems Integration";
+    if (/security|crypto|encrypt|certif/.test(text)) return "Security & Crypto";
+    if (/licens|cots|commercial/.test(text)) return "COTS Software Licenses";
+    if (/infrastructure|server|rack|network/.test(text)) return "Server Infrastructure";
+    if (/admin|administer|support|maintain/.test(text)) return "Systems Administration";
+    if (/program|manage|pm|scrum|agile/.test(text)) return "Program Management";
+    if (/access|case|battery|mount|accessory/.test(text)) return "Tactical Accessories";
+  }
+
+  if (mission === "pace") {
+    if (/automat.*pace|pace.*automat/.test(text)) return "Automated PACE";
+    if (/pace.*plan|plan.*pace/.test(text)) return "PACE Plan Development";
+    if (/data.*path|path.*optim|route.*optim|dynamic.*rout/.test(text)) return "Data Pathway Automation";
+    if (/bandwidth|compress|throughput/.test(text)) return "Bandwidth Optimization";
+    if (/qos|quality.*service|traffic.*prior/.test(text)) return "Traffic Prioritization / QoS";
+    if (/resilien|self.heal|failover|redundan/.test(text)) return "Communications Resilience";
+    if (/edge.*process|edge.*comput/.test(text)) return "Edge Data Processing";
+    if (/train|instruct|curriculum/.test(text)) return "PACE Training";
+    if (/network.*optim|optim.*network/.test(text)) return "Network Path Optimization";
+    if (/data.*flow|pipeline|automat.*data/.test(text)) return "Data Flow Automation";
+    if (/plan|architect|design/.test(text)) return "Network Planning";
+    if (/engineer|support|admin/.test(text)) return "Network Automation Engineering";
+  }
+
+  // Generic fallbacks by category
+  const fallbacks = {
+    "Software": "Software Development",
+    "Hardware": "Equipment Procurement",
+    "Personnel": "Professional Services",
+    "Purchase Equipment": "COTS Procurement"
+  };
+  return fallbacks[category] || "General Capability";
+}
+
+// Infer which specific TAK/PACE types are referenced
+function inferTypes(r, mission) {
+  const text = ((r.title || "") + " " + (r.description || "")).toLowerCase();
+  const types = [];
+
+  if (mission === "tak") {
+    if (/\batak\b/.test(text)) types.push("ATAK");
+    if (/\btak server\b|\btak-server\b/.test(text)) types.push("TAK Server");
+    if (/\btak x\b/.test(text)) types.push("TAK X");
+    if (/\bwintak\b/.test(text)) types.push("WinTAK");
+    if (/\bcursor on target\b|\bcot\b/.test(text)) types.push("Cursor on Target");
+    if (types.length === 0) types.push("General TAK");
+  } else if (mission === "pace") {
+    if (/\bpace\b/.test(text)) types.push("PACE");
+    if (/automat.*pace|pace.*automat/.test(text) && !types.includes("Automated PACE")) types.push("Automated PACE");
+    if (/network.*optim|optim.*network/.test(text)) types.push("Network Optimization");
+    if (/data.*path|path.*automat/.test(text)) types.push("Data Pathway Automation");
+    if (/traffic|qos|bandwidth/.test(text)) types.push("Traffic Management");
+    if (/resilien|self.heal/.test(text)) types.push("Communications Resilience");
+    if (/edge.*process/.test(text)) types.push("Edge Processing");
+    if (types.length === 0) types.push("General PACE");
+  } else {
+    types.push("Custom Search");
+  }
+
+  return types;
+}
+
+// Score relevance 1-10 based on keyword match density and field weights
+function scoreRelevance(r, matchers, mission) {
+  const fields = {
+    title:       (r.title || ""),
+    description: (r.description || ""),
+    naics:       (r.naicsCode || ""),
+    psc:         (r.classificationCode || "")
+  };
+
+  let score = 0;
+  let matchedInTitle = false;
+
+  for (const [field, value] of Object.entries(fields)) {
+    const weight = SCORE_RULES.fieldWeights[field] || 1;
+    for (const rx of matchers) {
+      const hits = (value.match(new RegExp(rx.source, "gi")) || []).length;
+      if (hits > 0) {
+        score += hits * weight;
+        if (field === "title") matchedInTitle = true;
+      }
+    }
+  }
+
+  // Bonus for title match (highly specific)
+  if (matchedInTitle) score += 3;
+
+  // Clamp to 1-10 scale: score 1-3 = low, 4-9 = medium, 10+ = high
+  if (score >= 8) return 10;
+  if (score >= 5) return 9;
+  if (score >= 3) return 8;
+  if (score >= 2) return 6;
+  if (score >= 1) return 5;
+  return 3; // matched by a non-title field only
+}
+
+// Build a plain-English summary from available fields
+function buildSummary(r) {
+  const title = r.title || "";
+  const org   = (r.fullParentPathName || "").split(">").pop()?.trim() || "";
+  const type  = r.type || "";
+  const naics = r.naicsCode ? ` NAICS: ${r.naicsCode}.` : "";
+  const desc  = (r.description || "").replace(/\s+/g," ").trim();
+  // Return full description if available, otherwise fall back to title info
+  const descSnippet = desc.length > 20 ? desc : "";
+  return descSnippet || `${type} from ${org}.${naics}`.trim() || title;
+}
+
+// Main local scoring function — replaces analyzeBatch entirely
+function scoreLocally(records, mission) {
+  const matchers = buildMatchers(MISSIONS[mission].fileKeywords);
+  return records.map(r => ({
+    id:           r.noticeId,
+    category:     inferCategory(r, MISSIONS[mission].fileKeywords),
+    subcategory:  inferSubcategory(r, inferCategory(r, MISSIONS[mission].fileKeywords), mission),
+    tak_types:    inferTypes(r, mission),
+    aiml_required: detectAIML(r),
+    summary:      buildSummary(r),
+    relevance:    scoreRelevance(r, matchers, mission)
+  }));
+}
+
+function fb(o) {
+  const mission = S.mission || "tak";
+  return {
+    id: o.noticeId,
+    category: inferCategory(o, MISSIONS[mission].fileKeywords),
+    subcategory: "General Capability",
+    tak_types: mission === "pace" ? ["General PACE"] : mission === "custom" ? ["Custom Search"] : ["General TAK"],
+    aiml_required: false,
+    summary: o.title || "Opportunity",
+    relevance: 3
+  };
+}
+
+// ─────────────────────────────────────────────
+// API SCAN FLOW (unchanged from before)
+// ─────────────────────────────────────────────
+
+async function startApiScan() {
+  const key = document.getElementById("samApiKey").value.trim();
+  if (!key) { showErr("errBoxApi","A SAM.gov API key is required."); return; }
+
+  if (S.mission === "custom") {
+    syncCustomMission();
+    if (MISSIONS.custom.apiKeywords.length === 0) {
+      showErr("errBoxApi","Add at least one keyword in the Custom Keywords field before scanning.");
+      return;
+    }
+  }
+
+  hideErr("errBoxApi");
+  const cfg = MISSIONS[S.mission];
+  document.getElementById("scanHeading").textContent = cfg.scanHeading;
+  document.getElementById("scanSubheading").textContent = cfg.scanSub;
+  showView("scan");
+  Object.keys(CAT).forEach(c => { S.cats[c]=[]; });
+  S.all=[];
+
+  try {
+    log("Connecting to SAM.gov API…","info");
+    log(`Note: Individual API keys have a low daily request limit. Using 1 request per keyword.`,"info");
+
+    let all=[];
+    const apiKws = cfg.apiKeywords;
+    for (let i=0;i<apiKws.length;i++) {
+      const kw=apiKws[i];
+      setProg(Math.round((i/apiKws.length)*55),`Querying "${kw}" (${i+1}/${apiKws.length})…`);
+      log(`Query ${i+1}/${apiKws.length}: "${kw}"…`,"proc");
+      try {
+        const r=await fetchSAM(key,kw);
+        all=[...all,...r];
+        log(`  → ${r.length} result${r.length!==1?"s":""}`, r.length>0?"ok":"warn");
+      } catch(e) {
+        log(`  → Error: ${e.message}`,"warn");
+        // If throttled, stop immediately rather than burning more quota
+        if (e.message.includes("throttled") || e.message.includes("quota") || e.message.includes("900804")) {
+          log("⚠ Daily API quota reached. Reset at midnight UTC. Use File Upload tab instead.","warn");
+          showView("setup");
+          showErr("errBoxApi",`Daily API quota exceeded — resets at midnight UTC.<br><br>Use the <strong>Data File Upload</strong> tab instead for unlimited scanning with no quota restrictions.`);
+          return;
+        }
+      }
+      if (i < apiKws.length-1) await sleep(300); // small delay between requests
+    }
+
+    const seen=new Set();
+    all=all.filter(o=>{ if(!o.noticeId||seen.has(o.noticeId)) return false; seen.add(o.noticeId); return true; });
+    if (!all.length) throw new Error("No opportunities returned. Verify your API key has Contract Opportunities access, or use the File Upload tab.");
+    log(`${all.length} unique opportunities found`,"ok");
+    S.all=all;
+    setProg(65,"Scoring results…");
+    const normalized=all.map(normalizeRecord);
+    const analyzed=scoreLocally(normalized, S.mission);
+    log(`Scored ${analyzed.length} records`,"ok");
+    const merged=normalized.map(r=>{ const a=analyzed.find(x=>x.id===r.noticeId); return {...r,...(a||fb(r))}; });
+    Object.keys(CAT).forEach(c=>{ S.cats[c]=[]; });
+    merged.forEach(o=>{ const c=o.category; if(c&&S.cats[c]) S.cats[c].push(o); else S.cats["Software"].push({...o,category:"Software"}); });
+    setProg(100,"Complete");
+    log("Report ready","ok");
+    await sleep(500);
+    renderDash(merged.length,false,"SAM.gov Live API");
+    showView("dashboard");
+  } catch(err) {
+    showView("setup");
+    showErr("errBoxApi",err.message);
+  }
+}
+
+async function fetchSAM(key, kw) {
+  // SAM.gov requires MM/DD/YYYY dates as literal slashes — do NOT use URLSearchParams
+  // for any params as it will encode slashes and other chars that SAM rejects
+  const now  = new Date();
+  const from = new Date(now);
+  from.setFullYear(from.getFullYear() - 1);
+  const fmt = d =>
+    `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
+
+  const url = `https://api.sam.gov/prod/opportunities/v2/search`
+    + `?api_key=${encodeURIComponent(key)}`
+    + `&limit=25`
+    + `&offset=0`
+    + `&ptype=o,k,p,r`
+    + `&active=true`
+    + `&title=${encodeURIComponent(kw)}`
+    + `&sort=-modifiedDate`
+    + `&postedFrom=${fmt(from)}`
+    + `&postedTo=${fmt(now)}`;
+
+  const r = await fetch(url, { headers: { Accept: "application/json" } });
+  const txt = await r.text();
+
+  if (!r.ok) {
+    let msg = txt.slice(0, 200);
+    try { const j = JSON.parse(txt); msg = j.errorMessage || j.error || msg; } catch(_) {}
+    throw new Error(`SAM.gov ${r.status}: ${msg}`);
+  }
+
+  const d = JSON.parse(txt);
+  return d.opportunitiesData || [];
+}
+
+// ─────────────────────────────────────────────
+// DEMO
+// ─────────────────────────────────────────────
+
+function loadDemo(mission) {
+  if (!mission) mission = S.mission || "tak";
+  S.mission = mission;
+
+  const takDemo=[
+    {noticeId:"D01",title:"ATAK Mobile Application Enhancement & Plugin Development – PEO C3T",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > PEO C3T",postedDate:"2025-03-01",uiLink:"https://sam.gov",solicitationNumber:"W56KGY-25-R-0042",category:"Software",subcategory:"Mobile App Dev",tak_types:["ATAK"],aiml_required:true,summary:"Development of new ATAK plugins with AI-enabled target recognition and enhanced sensor fusion for dismounted operations.",relevance:10},
+    {noticeId:"D02",title:"TAK Server Infrastructure Modernization – Cloud Migration & DevSecOps",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > AFSOC",postedDate:"2025-02-20",uiLink:"https://sam.gov",solicitationNumber:"H92240-25-R-0018",category:"Software",subcategory:"Backend/API Development",tak_types:["TAK Server"],aiml_required:false,summary:"Migration of TAK Server to a cloud-native, container-based architecture supporting 10,000+ concurrent users across AFSOC.",relevance:9},
+    {noticeId:"D03",title:"Rugged Android Tablets for ATAK – 500 Unit Procurement, USMC",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > USMC > MARCORSYSCOM",postedDate:"2025-03-10",uiLink:"https://sam.gov",solicitationNumber:"M67854-25-Q-0091",category:"Purchase Equipment",subcategory:"End User Devices",tak_types:["ATAK"],aiml_required:false,summary:"COTS procurement of 500 MIL-SPEC IP67-rated rugged Android tablets pre-configured for ATAK deployment in austere environments.",relevance:9},
+    {noticeId:"D04",title:"TAK Instructor & Operator Training Program – CONUS Delivery, TRADOC",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > TRADOC",postedDate:"2025-01-15",uiLink:"https://sam.gov",solicitationNumber:"W911SF-25-R-0007",category:"Personnel",subcategory:"TAK Operator Training",tak_types:["ATAK","TAK Server","WinTAK"],aiml_required:false,summary:"Multi-year IDIQ for certified TAK instructors to deliver ATAK, WinTAK, and TAK Server training across CONUS installations.",relevance:9},
+    {noticeId:"D05",title:"TAK X iOS Application Development – JSOC Special Operations",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > JSOC",postedDate:"2025-03-05",uiLink:"https://sam.gov",solicitationNumber:"H92402-25-R-0032",category:"Software",subcategory:"Mobile App Dev",tak_types:["TAK X"],aiml_required:true,summary:"Custom TAK X iOS plugin development with integrated ML-based pattern-of-life analysis and automated route planning for JSOC.",relevance:10},
+    {noticeId:"D06",title:"Harris AN/PRC-163 Multi-Channel Radio Procurement & ATAK Integration",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > USAF > AMC",postedDate:"2025-02-10",uiLink:"https://sam.gov",solicitationNumber:"FA4452-25-R-0014",category:"Hardware",subcategory:"Tactical Radios",tak_types:["ATAK","TAK Server"],aiml_required:false,summary:"Procurement and configuration of Harris AN/PRC-163 radios with ATAK MANET data links and TAK Server federation support.",relevance:8},
+    {noticeId:"D07",title:"ATAK/TAK Server Systems Administrator Support – EUCOM OCONUS",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > EUCOM",postedDate:"2025-02-28",uiLink:"https://sam.gov",solicitationNumber:"W15P7T-25-R-0063",category:"Personnel",subcategory:"Systems Administration",tak_types:["ATAK","TAK Server"],aiml_required:false,summary:"Contractor sysadmin support for ATAK and TAK Server infrastructure at EUCOM forward deployed locations across Europe.",relevance:9},
+    {noticeId:"D08",title:"Classified TAK Server Environment – SCIF Network Infrastructure, DIA",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DIA > J6",postedDate:"2025-03-08",uiLink:"https://sam.gov",solicitationNumber:"HHM402-25-R-0021",category:"Hardware",subcategory:"Server Infrastructure",tak_types:["TAK Server"],aiml_required:false,summary:"Rack-mounted servers and cross-domain solution hardware for a TS/SCI TAK Server environment within a new SCIF facility.",relevance:8},
+    {noticeId:"D09",title:"AI-Powered Geospatial Analytics Integration for ATAK – NGA Program",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > NGA > D3",postedDate:"2025-03-12",uiLink:"https://sam.gov",solicitationNumber:"HM047622R0001",category:"Software",subcategory:"Systems Integration",tak_types:["ATAK","TAK Server"],aiml_required:true,summary:"Integration of NGA deep-learning geospatial layers into ATAK for real-time automated terrain analysis and object recognition.",relevance:10},
+    {noticeId:"D10",title:"WinTAK Enterprise License Procurement – 1,200 Seat Army Program",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > PEO EIS",postedDate:"2025-03-01",uiLink:"https://sam.gov",solicitationNumber:"W52P1J-25-Q-0088",category:"Purchase Equipment",subcategory:"COTS Software Licenses",tak_types:["WinTAK"],aiml_required:false,summary:"Enterprise WinTAK software license procurement covering 1,200 seats with software assurance and maintenance.",relevance:9},
+    {noticeId:"D11",title:"TAK Program Manager / Scrum Master Support – PEO C3T Agile Team",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > PEO C3T",postedDate:"2025-02-14",uiLink:"https://sam.gov",solicitationNumber:"W56KGY-25-R-0037",category:"Personnel",subcategory:"Program Management",tak_types:["General TAK"],aiml_required:false,summary:"Senior PM and Scrum Master to lead TAK ecosystem software development sprints and stakeholder coordination.",relevance:7},
+    {noticeId:"D12",title:"ATAK Accessories – Ruggedized Cases, Extended Batteries, Vehicle Mounts",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > USMC > MARCORSYSCOM",postedDate:"2025-03-03",uiLink:"https://sam.gov",solicitationNumber:"M67854-25-Q-0103",category:"Purchase Equipment",subcategory:"Tactical Accessories",tak_types:["ATAK"],aiml_required:false,summary:"COTS procurement of ruggedized cases, extended batteries, and vehicle-mount cradles for ATAK Android devices.",relevance:7},
+    {noticeId:"D13",title:"TAK Server Plugin & API Development – Intelligence Data Integration, DIA",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DIA > J2",postedDate:"2025-03-14",uiLink:"https://sam.gov",solicitationNumber:"HHM402-25-R-0029",category:"Software",subcategory:"Plugin Development",tak_types:["TAK Server","ATAK"],aiml_required:true,summary:"Development of classified TAK Server plugins to ingest and normalize intelligence feeds with ML-driven anomaly detection.",relevance:10},
+    {noticeId:"D14",title:"Wearable Body-Worn Cameras with ATAK Integration – FBI Tactical",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DOJ > FBI",postedDate:"2025-02-18",uiLink:"https://sam.gov",solicitationNumber:"DJF-25-1200-PR-0047",category:"Hardware",subcategory:"Wearable Sensors",tak_types:["ATAK"],aiml_required:false,summary:"Body-worn camera systems with real-time location streaming and video feed forwarding to TAK Server for tactical law enforcement.",relevance:8},
+    {noticeId:"D15",title:"TAK Curriculum Development & Mobile Training Team Support – TSOC",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > TSOC",postedDate:"2025-02-25",uiLink:"https://sam.gov",solicitationNumber:"H92240-25-R-0022",category:"Personnel",subcategory:"Curriculum Development",tak_types:["ATAK","TAK X","TAK Server"],aiml_required:false,summary:"TAK ecosystem training curriculum and Mobile Training Teams deployed to TSOC-aligned units globally.",relevance:9}
+  ];
+
+  const paceDemo=[
+    {noticeId:"P01",title:"Automated PACE Planning Tool Development – Army Network Enterprise Center",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > NEC",postedDate:"2025-03-10",uiLink:"https://sam.gov",solicitationNumber:"W25G1U-25-R-0041",category:"Software",subcategory:"Automated PACE",tak_types:["Automated PACE","PACE"],aiml_required:true,summary:"Development of an AI-assisted automated PACE planning tool that analyzes unit communications environments and generates optimized primary, alternate, contingency, and emergency communication plans.",relevance:10},
+    {noticeId:"P02",title:"Dynamic Data Path Optimization Engine – SOCOM J6 Communications",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > J6",postedDate:"2025-02-28",uiLink:"https://sam.gov",solicitationNumber:"H92240-25-R-0061",category:"Software",subcategory:"Data Pathway Automation",tak_types:["Data Pathway Automation","Network Optimization"],aiml_required:true,summary:"Engineering services to build an intelligent data pathway optimization engine that automatically routes traffic across available communication channels based on real-time link health and mission priority.",relevance:10},
+    {noticeId:"P03",title:"PACE Communication Plan Automation Software – Brigade Combat Team",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > PEO C3T",postedDate:"2025-03-05",uiLink:"https://sam.gov",solicitationNumber:"W56KGY-25-R-0071",category:"Software",subcategory:"PACE Automation Tool",tak_types:["Automated PACE","PACE"],aiml_required:false,summary:"Software tool to automate the generation, validation, and updating of PACE communication plans for Brigade Combat Teams, reducing planning time and ensuring currency of contingency pathways.",relevance:10},
+    {noticeId:"P04",title:"PACE Planning Instruction & Curriculum Development – TRADOC",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > TRADOC",postedDate:"2025-01-22",uiLink:"https://sam.gov",solicitationNumber:"W911SF-25-R-0019",category:"Personnel",subcategory:"PACE Training",tak_types:["PACE"],aiml_required:false,summary:"Multi-year IDIQ to develop and deliver PACE communications planning curriculum and hands-on instruction to Army units across CONUS installations.",relevance:9},
+    {noticeId:"P05",title:"Intelligent Traffic Prioritization & QoS Management – Joint C2 Networks",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DISA > J6",postedDate:"2025-03-12",uiLink:"https://sam.gov",solicitationNumber:"HC1028-25-R-0014",category:"Software",subcategory:"Traffic Prioritization / QoS",tak_types:["Traffic Management","Network Optimization"],aiml_required:true,summary:"Development of an ML-driven quality-of-service management platform that dynamically prioritizes command and control traffic across multiple bearer networks in contested bandwidth environments.",relevance:9},
+    {noticeId:"P06",title:"Network Path Optimization COTS Software License – EUCOM J6",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > EUCOM > J6",postedDate:"2025-02-15",uiLink:"https://sam.gov",solicitationNumber:"W15P7T-25-Q-0092",category:"Purchase Equipment",subcategory:"Network Optimization Software",tak_types:["Network Optimization","PACE"],aiml_required:false,summary:"Enterprise licensing of COTS network path optimization software to support EUCOM's automated traffic routing and PACE tier switching across forward deployed locations in Europe.",relevance:8},
+    {noticeId:"P07",title:"Data Flow Automation & Pipeline Optimization – SOCOM Tactical Edge",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > J6",postedDate:"2025-03-08",uiLink:"https://sam.gov",solicitationNumber:"H92240-25-R-0031",category:"Software",subcategory:"Data Flow Automation",tak_types:["Data Pathway Automation","Edge Processing"],aiml_required:true,summary:"Engineering services for automated data pipeline management, intelligent compression, and edge-based preprocessing to maximize effective data throughput across constrained SOCOM tactical links.",relevance:10},
+    {noticeId:"P08",title:"PACE Planner Support – XVIII Airborne Corps G6",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > XVIII Airborne Corps",postedDate:"2025-02-25",uiLink:"https://sam.gov",solicitationNumber:"W25G1U-25-R-0055",category:"Personnel",subcategory:"PACE Planner Support",tak_types:["PACE","Automated PACE"],aiml_required:false,summary:"Senior PACE communications planners to develop, exercise, and maintain PACE plans for all XVIII Airborne Corps subordinate units, integrating automated PACE tools into the planning cycle.",relevance:9},
+    {noticeId:"P09",title:"Self-Healing Network Automation – Resilient Communications Framework",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DARPA > I2O",postedDate:"2025-03-14",uiLink:"https://sam.gov",solicitationNumber:"HR001125R0044",category:"Software",subcategory:"Communications Resilience",tak_types:["Communications Resilience","Network Optimization","Automated PACE"],aiml_required:true,summary:"Research and development of autonomous self-healing network software that detects communication path failures, evaluates available PACE alternatives, and seamlessly switches to the optimal path with no operator intervention.",relevance:10},
+    {noticeId:"P10",title:"Edge Data Processing Nodes – Forward Operating Base Comms Optimization",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > CECOM",postedDate:"2025-03-02",uiLink:"https://sam.gov",solicitationNumber:"W15P7T-25-Q-0108",category:"Purchase Equipment",subcategory:"Edge Data Processing",tak_types:["Edge Processing","Data Pathway Automation"],aiml_required:false,summary:"Procurement of hardened edge compute nodes to enable local data aggregation, processing, and intelligent routing decisions at forward operating bases, reducing backhaul bandwidth requirements.",relevance:8},
+    {noticeId:"P11",title:"Automated PACE Switching & Monitoring Dashboard – EUCOM",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > EUCOM > J6",postedDate:"2025-02-10",uiLink:"https://sam.gov",solicitationNumber:"W15P7T-25-R-0079",category:"Software",subcategory:"Automated PACE",tak_types:["Automated PACE","PACE","Traffic Management"],aiml_required:false,summary:"Development of a centralized monitoring and automated switching dashboard enabling EUCOM J6 to visualize PACE tier health and trigger automatic path failover across all component command communications.",relevance:9},
+    {noticeId:"P12",title:"Network Optimization Engineering Support – III Corps G6",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > U.S. ARMY > III Corps",postedDate:"2025-02-18",uiLink:"https://sam.gov",solicitationNumber:"W25G1U-25-R-0041",category:"Personnel",subcategory:"Network Automation Engineering",tak_types:["Network Optimization","PACE"],aiml_required:false,summary:"Contractor network optimization engineers to analyze III Corps communication paths, implement bandwidth management policies, and develop automated failover procedures aligned to the corps PACE plan.",relevance:8},
+    {noticeId:"P13",title:"Bandwidth Optimization & Data Compression Suite – Joint Intelligence Support",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > DIA > J6",postedDate:"2025-03-11",uiLink:"https://sam.gov",solicitationNumber:"HHM402-25-R-0038",category:"Software",subcategory:"Bandwidth Optimization",tak_types:["Network Optimization","Data Pathway Automation"],aiml_required:true,summary:"AI-powered bandwidth optimization and adaptive data compression software to maximize ISR data transport efficiency across constrained PACE communication links in denied and degraded environments.",relevance:9},
+    {noticeId:"P14",title:"PACE Automation Tool COTS License – National Guard Bureau G6",type:"Purchase Order",fullParentPathName:"DEPT OF DEFENSE > ARNG > G6",postedDate:"2025-02-22",uiLink:"https://sam.gov",solicitationNumber:"W912L1-25-Q-0051",category:"Purchase Equipment",subcategory:"PACE Automation Tool",tak_types:["Automated PACE","PACE"],aiml_required:false,summary:"Enterprise licensing of a COTS automated PACE planning and management platform for National Guard Bureau units to standardize PACE plan development and maintain communication path currency.",relevance:8},
+    {noticeId:"P15",title:"Secure Automated Data Transport Framework – JSOC Communications",type:"Solicitation",fullParentPathName:"DEPT OF DEFENSE > SOCOM > JSOC",postedDate:"2025-02-05",uiLink:"https://sam.gov",solicitationNumber:"H92402-25-R-0044",category:"Software",subcategory:"Secure Data Transport",tak_types:["Data Pathway Automation","Communications Resilience","PACE"],aiml_required:true,summary:"Development of a secure automated data transport framework providing end-to-end encrypted path selection, intelligent routing across PACE tiers, and real-time adaptation to link degradation for JSOC special operations.",relevance:10}
+  ];
+
+  const demo = mission === "pace" ? paceDemo : takDemo;
+  Object.keys(CAT).forEach(c=>{S.cats[c]=[];});
+  demo.forEach(o=>{ if(S.cats[o.category]) S.cats[o.category].push(o); else S.cats["Software"].push(o); });
+  S.all=demo;
+  renderDash(demo.length,true,"Demo data");
+  showView("dashboard");
+}
+
+// ─────────────────────────────────────────────
+// RENDER DASHBOARD
+// ─────────────────────────────────────────────
+
+// ─────────────────────────────────────────────
+// MATCH LEVEL HELPERS
+// ─────────────────────────────────────────────
+
+function matchLevel(r) {
+  const v = r.relevance || 0;
+  if (v >= 8) return "high";
+  if (v >= 5) return "med";
+  return "low";
+}
+
+function matchLabel(lvl) {
+  return { high:"High", med:"Medium", low:"Low" }[lvl] || "Low";
+}
+
+function matchChipCls(lvl) {
+  return { high:"c-green", med:"c-amber", low:"c-muted" }[lvl] || "c-muted";
+}
+
+function renderDash(total, isDemo, source) {
+  const cfg = MISSIONS[S.mission];
+  const flat = Object.values(S.cats).flat();
+  const aiml = flat.filter(o=>o.aiml_required).length;
+  const highN = flat.filter(o=>matchLevel(o)==="high").length;
+  const medN  = flat.filter(o=>matchLevel(o)==="med").length;
+  const lowN  = flat.filter(o=>matchLevel(o)==="low").length;
+  const types = [...new Set(flat.flatMap(o=>o.tak_types||[]))];
+
+  // Update dashboard header
+  document.getElementById("dashEyebrow").textContent = "Intelligence Report — " + cfg.label;
+  document.getElementById("dashTitle").textContent = cfg.title;
+  document.getElementById("catSectionLabel").textContent = cfg.catLabel;
+  document.getElementById("dashMeta").textContent =
+    `${isDemo?"Demo — ":""}Source: ${source} · ${total} ${cfg.meta} · ${new Date().toISOString().slice(0,10)}`;
+
+  const statsData = [
+    {v:total,   l:"Total found",       cls:""},
+    {v:highN,   l:"High match",        cls:"v-green"},
+    {v:medN,    l:"Medium match",      cls:"v-amber"},
+    {v:aiml,    l:"AI/ML required",    cls:"v-amber"},
+    {v:types.length, l: S.mission==="tak" ? "TAK platforms" : S.mission==="pace" ? "Network types" : "Keyword types", cls:"v-accent"},
+  ];
+  document.getElementById("statsGrid").innerHTML = statsData.map((s,i)=>`
+    <div class="stat-tile appear d${i+1}">
+      <div class="stat-num ${s.cls}">${s.v}</div>
+      <div class="stat-lbl">${s.l}</div>
+    </div>`).join("");
+
+  // Match confidence bands
+  const bandDesc = {
+    high: S.mission==="tak" ? "Explicitly TAK-focused" : S.mission==="pace" ? "Explicitly PACE/Network-focused" : "Explicitly matches your keywords",
+    med:  S.mission==="tak" ? "TAK-adjacent or implied"  : S.mission==="pace" ? "Network-adjacent or implied"     : "Partially matches your keywords",
+    low:  "Loosely related, review manually"
+  };
+  const bands = [
+    { key:"high", cls:"mb-high", label:"High Match",   range:"Score 8 – 10", count:highN, desc: bandDesc.high },
+    { key:"med",  cls:"mb-med",  label:"Medium Match",  range:"Score 5 – 7",  count:medN,  desc: bandDesc.med  },
+    { key:"low",  cls:"mb-low",  label:"Low Match",     range:"Score 1 – 4",  count:lowN,  desc: bandDesc.low  },
+  ];
+  document.getElementById("matchGrid").innerHTML = bands.map((b,i)=>{
+    const pct = total > 0 ? Math.round((b.count/total)*10) : 0;
+    const segs = Array.from({length:10},(_,j)=>
+      `<div class="mb-seg ${j<pct?"filled":"empty"}"></div>`).join("");
+    return `<div class="match-band ${b.cls} appear d${i+1}" onclick="openMatchDrawer('${b.key}')">
+      <div class="mb-label-row">
+        <div style="display:flex;align-items:center;gap:7px;">
+          <div class="mb-dot"></div>
+          <span class="mb-tag">${b.label}</span>
+        </div>
+        <span class="mb-score-range">${b.range}</span>
+      </div>
+      <div class="mb-count">${b.count}</div>
+      <div class="mb-sub">${b.desc}</div>
+      <div class="mb-bar-row">${segs}</div>
+      <div class="mb-footer">
+        <span style="font-size:11px;color:var(--text-3);">${total>0?Math.round(b.count/total*100):0}% of results</span>
+        <div class="mb-cta">View opportunities <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 5.5h6M6.5 3.5l2 2-2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("catGrid").innerHTML = Object.entries(CAT).map(([cat,meta],i)=>{
+    const opps=S.cats[cat]||[];
+    const aiCount=opps.filter(o=>o.aiml_required).length;
+    const subcats=[...new Set(opps.map(o=>o.subcategory).filter(Boolean))].slice(0,4);
+    const types=[...new Set(opps.flatMap(o=>o.tak_types||[]))].slice(0,4);
+    const allSubs=[...new Set(opps.map(o=>o.subcategory).filter(Boolean))];
+    const hiC=opps.filter(o=>matchLevel(o)==="high").length;
+    const mdC=opps.filter(o=>matchLevel(o)==="med").length;
+    const loC=opps.filter(o=>matchLevel(o)==="low").length;
+    return `<div class="cat-card ${meta.cls} appear d${i+1}" onclick="openDrawer('${cat}')">
+      <div class="ct-top">
+        <div class="ct-icon">${meta.icon}</div>
+        <div class="ct-count">${opps.length}</div>
+      </div>
+      <div class="ct-name">${cat}</div>
+      <div class="ct-desc">${meta.desc}</div>
+      ${opps.length?`<div style="display:flex;gap:6px;margin-bottom:14px;padding:10px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--green);line-height:1;">${hiC}</div>
+          <div style="font-size:9px;color:var(--text-3);margin-top:2px;letter-spacing:.04em;text-transform:uppercase;">High</div>
+        </div>
+        <div style="width:1px;background:var(--border);"></div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--amber);line-height:1;">${mdC}</div>
+          <div style="font-size:9px;color:var(--text-3);margin-top:2px;letter-spacing:.04em;text-transform:uppercase;">Med</div>
+        </div>
+        <div style="width:1px;background:var(--border);"></div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;color:var(--text-3);line-height:1;">${loC}</div>
+          <div style="font-size:9px;color:var(--text-3);margin-top:2px;letter-spacing:.04em;text-transform:uppercase;">Low</div>
+        </div>
+      </div>`:""}
+      ${subcats.length?`<div class="ct-sublabel">Subcategories</div><div class="ct-chips">
+        ${subcats.map(s=>`<span class="chip ${meta.chipCls}" style="font-size:10px;">${s}</span>`).join("")}
+        ${allSubs.length>subcats.length?`<span class="chip c-muted" style="font-size:10px;">+${allSubs.length-subcats.length} more</span>`:""}
+      </div>`:""}
+      ${types.length?`<div class="ct-sublabel" style="margin-top:10px;">${S.mission==="tak"?"TAK systems":S.mission==="pace"?"Network types":"Keyword types"}</div><div class="ct-chips">
+        ${types.map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
+      </div>`:""}
+      <div class="ct-footer">
+        <div class="ct-ai">
+          ${aiCount>0
+            ?`<svg width="11" height="11" viewBox="0 0 11 11" fill="currentColor"><path d="M5.5 1L6.9 4.1H10.2L7.5 6.2l1 3-3-2-3 2 1-3L.8 4.1h3.3z"/></svg>${aiCount} with AI/ML`
+            :`<span style="color:var(--text-3);font-size:11px;font-weight:400;">No AI/ML requirements</span>`}
+        </div>
+        <div class="ct-cta">View all <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2.5 5.5h6M6.5 3.5l2 2-2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ─────────────────────────────────────────────
+// DRAWER
+// ─────────────────────────────────────────────
+
+function openMatchDrawer(level) {
+  // Open drawer filtered to a specific match level across all categories
+  S.activeCat = "__MATCH__";
+  S.activeMatchLevel = level;
+  const labels = { high:"High Match", med:"Medium Match", low:"Low Match" };
+  const all = Object.values(S.cats).flat();
+  const filtered = all.filter(o => matchLevel(o) === level);
+
+  document.getElementById("drwTitle").textContent = labels[level] + " Opportunities";
+
+  // Build sub-filters by category
+  const catCounts = {};
+  filtered.forEach(o => { catCounts[o.category] = (catCounts[o.category]||0)+1; });
+
+  document.getElementById("filterPills").innerHTML = `
+    <button class="fpill active" onclick="filterMatchDrw('ALL',this)">All (${filtered.length})</button>
+    ${Object.entries(catCounts).map(([c,n])=>
+      `<button class="fpill" onclick="filterMatchDrw('${esc(c)}',this)">${c} (${n})</button>`).join("")}
+    ${filtered.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterMatchDrw('AIML',this)">⚡ AI/ML</button>`:""}
+  `;
+
+  renderMatchOppList(filtered);
+  document.getElementById("drawer").classList.add("open");
+}
+
+function filterMatchDrw(val, btn) {
+  document.querySelectorAll(".fpill").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const level = S.activeMatchLevel;
+  let opps = Object.values(S.cats).flat().filter(o => matchLevel(o) === level);
+  if (val === "AIML") opps = opps.filter(o=>o.aiml_required);
+  else if (val !== "ALL") opps = opps.filter(o=>o.category === val);
+  renderMatchOppList(opps);
+}
+
+function renderMatchOppList(opps) {
+  const el = document.getElementById("drwBody");
+  if (!opps.length) { el.innerHTML='<div class="empty-state">No opportunities match this filter.</div>'; return; }
+  // Sort by relevance desc
+  const sorted = [...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
+  el.innerHTML = sorted.map(o => {
+    const cat = o.category||"Software";
+    const chipCls = CAT[cat]?.chipCls||"c-muted";
+    const lvl = matchLevel(o);
+    return `
+    <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <div class="match-dot ${lvl}" style="margin-top:5px;"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="opp-name">${o.title||"Untitled"}</div>
+          <div class="opp-meta">
+            <span class="opp-agency">${(o.fullParentPathName||"").split(">").pop()?.trim()||"Unknown"}</span>
+            ${o.postedDate?`<span class="opp-dot">·</span><span class="opp-date">Posted: ${String(o.postedDate).slice(0,10)}</span>`:""}
+            ${o.responseDeadLine?`<span class="opp-dot">·</span><span class="opp-date" style="color:var(--amber);">Ends: ${String(o.responseDeadLine).slice(0,10)}</span>`:""}
+          </div>
+          <div class="opp-chips">
+            <span class="chip ${chipCls}" style="font-size:10px;">${cat}</span>
+            <span class="chip ${chipCls}" style="font-size:10px;">${o.subcategory||(S.mission==="pace"?"PACE/Network":S.mission==="custom"?"Matched Opportunity":"TAK Capability")}</span>
+            ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
+            ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:var(--display);font-size:16px;font-weight:700;color:${lvl==="high"?"var(--green)":lvl==="med"?"var(--amber)":"var(--text-3)"};">${o.relevance||"?"}</div>
+          <div style="font-size:9px;color:var(--text-3);">/ 10</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function openDrawer(cat) {
+  S.activeCat=cat;
+  S.activeMatchLevel=null;
+  const meta=CAT[cat];
+  const opps=S.cats[cat]||[];
+  document.getElementById("drwTitle").textContent=cat;
+  const subcats=[...new Set(opps.map(o=>o.subcategory).filter(Boolean))];
+  document.getElementById("filterPills").innerHTML=`
+    <button class="fpill active" onclick="filterDrw('ALL',this)">All (${opps.length})</button>
+    <button class="fpill" onclick="filterDrw('HIGH',this)">● High (${opps.filter(o=>matchLevel(o)==="high").length})</button>
+    <button class="fpill" onclick="filterDrw('MED',this)">● Med (${opps.filter(o=>matchLevel(o)==="med").length})</button>
+    <button class="fpill" onclick="filterDrw('LOW',this)">● Low (${opps.filter(o=>matchLevel(o)==="low").length})</button>
+    ${subcats.map(s=>`<button class="fpill" onclick="filterDrw('SC:${esc(s)}',this)">${s}</button>`).join("")}
+    ${opps.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterDrw('AIML',this)">⚡ AI/ML</button>`:""}
+  `;
+  renderOppList(opps,meta.chipCls);
+  document.getElementById("drawer").classList.add("open");
+}
+
+function filterDrw(val,btn) {
+  document.querySelectorAll(".fpill").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const cat = S.activeCat;
+  const meta = CAT[cat];
+  if (!meta) return; // guard: shouldn't happen but prevents crash
+  let opps = S.cats[cat]||[];
+  if      (val==="AIML") opps=opps.filter(o=>o.aiml_required);
+  else if (val==="HIGH") opps=opps.filter(o=>matchLevel(o)==="high");
+  else if (val==="MED")  opps=opps.filter(o=>matchLevel(o)==="med");
+  else if (val==="LOW")  opps=opps.filter(o=>matchLevel(o)==="low");
+  else if (val.startsWith("SC:")) opps=opps.filter(o=>o.subcategory===val.slice(3));
+  opps = [...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
+  renderOppList(opps, meta.chipCls);
+}
+
+function renderOppList(opps,chipCls) {
+  const el=document.getElementById("drwBody");
+  if(!opps.length){el.innerHTML='<div class="empty-state">No opportunities match this filter.</div>';return;}
+  const sorted=[...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
+  el.innerHTML=sorted.map(o=>{
+    const lvl=matchLevel(o);
+    const scoreColor=lvl==="high"?"var(--green)":lvl==="med"?"var(--amber)":"var(--text-3)";
+    return `
+    <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <div class="match-dot ${lvl}" style="margin-top:5px;"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="opp-name">${o.title||"Untitled"}</div>
+          <div class="opp-meta">
+            <span class="opp-agency">${(o.fullParentPathName||"").split(">").pop()?.trim()||"Unknown"}</span>
+            ${o.postedDate?`<span class="opp-dot">·</span><span class="opp-date">Posted: ${String(o.postedDate).slice(0,10)}</span>`:""}
+            ${o.responseDeadLine?`<span class="opp-dot">·</span><span class="opp-date" style="color:var(--amber);">Ends: ${String(o.responseDeadLine).slice(0,10)}</span>`:""}
+          </div>
+          <div class="opp-chips">
+            <span class="chip ${chipCls}" style="font-size:10px;">${o.subcategory||(S.mission==="pace"?"PACE/Network":S.mission==="custom"?"Matched Opportunity":"TAK Capability")}</span>
+            ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
+            ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-family:var(--display);font-size:16px;font-weight:700;color:${scoreColor};">${o.relevance||"?"}</div>
+          <div style="font-size:9px;color:var(--text-3);">/ 10</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");S.activeCat=null;S.activeMatchLevel=null;}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+
+function openModal(id) {
+  const opp=Object.values(S.cats).flat().find(o=>o.noticeId===id);
+  if(!opp) return;
+  const cat=opp.category||"Software";
+  const chipCls=CAT[cat]?.chipCls||"c-muted";
+  const lvl=matchLevel(opp);
+  const matchColors={high:"var(--green)",med:"var(--amber)",low:"var(--text-3)"};
+  const matchBorders={high:"rgba(34,197,94,0.3)",med:"rgba(245,158,11,0.3)",low:"var(--border)"};
+  const matchBgs={high:"var(--green-bg)",med:"var(--amber-bg)",low:"var(--bg3)"};
+  document.getElementById("modalTitle").textContent=opp.title||"Opportunity Detail";
+  document.getElementById("modalBody").innerHTML=`
+    <div class="m2" style="margin-bottom:18px;">
+      <div class="mf"><div class="mf-lbl">Match Level</div><div class="mf-val">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--r);border:1px solid ${matchBorders[lvl]};background:${matchBgs[lvl]};">
+          <div style="width:7px;height:7px;border-radius:50%;background:${matchColors[lvl]};${lvl!=="low"?"box-shadow:0 0 6px "+matchColors[lvl]+";":""}"></div>
+          <span style="font-size:12px;font-weight:600;color:${matchColors[lvl]};">${matchLabel(lvl)}</span>
+          <span style="font-family:var(--display);font-size:16px;font-weight:700;color:${matchColors[lvl]};">${opp.relevance||"?"}<span style="font-size:11px;color:var(--text-3);font-weight:400;"> / 10</span></span>
+        </div>
+      </div></div>
+      <div class="mf"><div class="mf-lbl">AI / ML Requirement</div><div class="mf-val">
+        ${opp.aiml_required
+          ?`<div class="ai-badge"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1L7.5 4.5H11.5L8.5 6.8 9.7 10.5 6 8.3 2.3 10.5 3.5 6.8.5 4.5H4.5Z"/></svg>AI / ML required</div>`
+          :`<span style="color:var(--text-3);">Not specified</span>`}
+      </div></div>
+    </div>
+    <div class="m2">
+      <div class="mf"><div class="mf-lbl">Category</div><div class="mf-val"><span class="chip ${chipCls}">${cat}</span></div></div>
+      <div class="mf"><div class="mf-lbl">Subcategory</div><div class="mf-val">${opp.subcategory||"—"}</div></div>
+    </div>
+    <div class="mf"><div class="mf-lbl">${S.mission==="tak"?"TAK Systems Referenced":S.mission==="pace"?"Network / PACE Types":"Matched Keywords"}</div><div class="mf-val" style="display:flex;gap:4px;flex-wrap:wrap;">
+      ${(opp.tak_types||[]).map(t=>`<span class="chip c-accent">${t}</span>`).join("")||`<span style="color:var(--text-3);">None specified</span>`}
+    </div></div>
+    <div class="m2">
+      <div class="mf"><div class="mf-lbl">Agency</div><div class="mf-val" style="font-size:12px;">${(opp.fullParentPathName||"—").split(">").slice(-2).join(" › ").trim()}</div></div>
+      <div class="mf"><div class="mf-lbl">Notice Type</div><div class="mf-val">${opp.type||"—"}</div></div>
+    </div>
+    <div class="m2">
+      <div class="mf"><div class="mf-lbl">Posted</div><div class="mf-val">${opp.postedDate?String(opp.postedDate).slice(0,10):"—"}</div></div>
+      <div class="mf"><div class="mf-lbl">Response Deadline</div><div class="mf-val" style="${opp.responseDeadLine?"color:var(--amber);font-weight:500;":""}">${opp.responseDeadLine?String(opp.responseDeadLine).slice(0,10):"—"}</div></div>
+    </div>
+    <div class="m2">
+      <div class="mf"><div class="mf-lbl">Solicitation No.</div><div class="mf-val" style="font-size:12px;font-family:monospace;">${opp.solicitationNumber||"—"}</div></div>
+    </div>
+    <div class="mf">
+      <div class="mf-lbl">Relevance Score</div>
+      <div class="rel-wrap">
+        <div class="rel-track"><div class="rel-fill" style="width:${(opp.relevance||0)*10}%;background:linear-gradient(90deg,${matchColors[lvl]},${matchColors[lvl]});opacity:0.8;"></div></div>
+        <div class="rel-score" style="color:${matchColors[lvl]};">${opp.relevance||"?"}<span style="font-size:12px;color:var(--text-3);font-weight:400;">/10</span></div>
+      </div>
+    </div>
+    ${opp.uiLink?`<div style="margin-top:4px;"><a class="ext-link" href="${opp.uiLink}" target="_blank"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 2h7M9 2v7M9 2L3.5 7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>View on SAM.gov</a></div>`:""}
+  `;
+  document.getElementById("modalScrim").classList.add("open");
+}
+
+function handleScrim(e){if(e.target===document.getElementById("modalScrim"))closeModal();}
+function closeModal(){document.getElementById("modalScrim").classList.remove("open");}
+
+// ─────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────
+
+function showView(v) {
+  document.getElementById("missionView").style.display  = v==="mission"?"flex":"none";
+  document.getElementById("setupView").style.display    = v==="setup"?"flex":"none";
+  document.getElementById("scanView").style.display     = v==="scan"?"flex":"none";
+  document.getElementById("dashboard").style.display    = v==="dashboard"?"block":"none";
+  if(v==="mission"||v==="setup"||v==="scan"){closeDrawer();closeModal();}
+}
+
+function showErr(id, msg) {
+  const e = document.getElementById(id);
+  // Accept either plain text or HTML
+  e.innerHTML = msg.replace(/\n/g, "<br>");
+  e.style.display = "block";
+}
+function hideErr(id)       { document.getElementById(id).style.display="none"; }
+
+function setProg(pct,msg,detail) {
+  const p=Math.round(pct);
+  document.getElementById("progFill").style.width=p+"%";
+  document.getElementById("pctLbl").textContent=p+"%";
+  if(msg)    document.getElementById("scanMsg").textContent=msg;
+  if(detail!==undefined) document.getElementById("scanDetail").textContent=detail||"";
+}
+
+function log(msg,type="info") {
+  const el=document.getElementById("logBox");
+  const d=document.createElement("div");
+  d.className="log-line";
+  d.innerHTML=`<span class="log-ts">${new Date().toTimeString().slice(0,8)}</span><span class="log-${type}">${msg}</span>`;
+  el.appendChild(d); el.scrollTop=el.scrollHeight;
+}
+
+function resetScan() {
+  closeDrawer(); closeModal();
+  Object.keys(CAT).forEach(c=>{S.cats[c]=[];});
+  S.all=[];
+  // Keep loadedFile and parsedRecords so same file can be reused
+  document.getElementById("logBox").innerHTML="";
+  setProg(0,"","");
+  showView("setup");
+}
+
+function esc(s){return (s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+</script>
+</body>
+</html>

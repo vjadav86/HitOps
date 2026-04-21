@@ -685,11 +685,10 @@ body {
   width: 100%; padding: 60px 24px 80px;
 }
 .mission-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 16px; width: 100%; max-width: 960px;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 16px; width: 100%; max-width: 760px;
   margin-top: 40px;
 }
-@media (max-width: 800px) { .mission-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .mission-grid { grid-template-columns: 1fr; } }
 
 .mission-card {
@@ -710,6 +709,7 @@ body {
 }
 .mc-tak::before    { background: linear-gradient(90deg, var(--blue), var(--teal)); }
 .mc-pace::before   { background: linear-gradient(90deg, var(--purple), var(--rose)); }
+.mc-edge::before   { background: linear-gradient(90deg, var(--amber), var(--rose)); }
 .mc-custom::before { background: linear-gradient(90deg, var(--green), var(--amber)); }
 
 .mc-icon {
@@ -719,6 +719,7 @@ body {
 }
 .mc-tak    .mc-icon { background: rgba(138,180,248,0.12); color: var(--blue); }
 .mc-pace   .mc-icon { background: rgba(208,188,255,0.12); color: var(--purple); }
+.mc-edge   .mc-icon { background: rgba(253,214,99,0.12);  color: var(--amber); }
 .mc-custom .mc-icon { background: rgba(129,201,149,0.12); color: var(--green); }
 
 .mc-title {
@@ -727,6 +728,7 @@ body {
 }
 .mc-tak    .mc-title { color: var(--blue); }
 .mc-pace   .mc-title { color: var(--purple); }
+.mc-edge   .mc-title { color: var(--amber); }
 .mc-custom .mc-title { color: var(--green); }
 
 .mc-desc { font-size: 13px; color: var(--text-3); line-height: 1.6; margin-bottom: 18px; letter-spacing: 0.01em; }
@@ -739,6 +741,7 @@ body {
 }
 .mc-tak    .mc-cta { color: var(--blue); }
 .mc-pace   .mc-cta { color: var(--purple); }
+.mc-edge   .mc-cta { color: var(--amber); }
 .mc-custom .mc-cta { color: var(--green); }
 .mission-card:hover .mc-cta { gap: 10px; }
 
@@ -865,11 +868,11 @@ body {
         <div class="mc-title">TAK Capability</div>
         <div class="mc-desc">Find opportunities to build or support ATAK, TAK Server, TAK X, and WinTAK ecosystems.</div>
         <div class="mc-keywords">
+          <span class="chip c-blue" style="font-size:10px;">TAK</span>
           <span class="chip c-blue" style="font-size:10px;">ATAK</span>
           <span class="chip c-blue" style="font-size:10px;">TAK Server</span>
-          <span class="chip c-blue" style="font-size:10px;">TAK X</span>
           <span class="chip c-blue" style="font-size:10px;">WinTAK</span>
-          <span class="chip c-muted" style="font-size:10px;">+4 more</span>
+          <span class="chip c-muted" style="font-size:10px;">+8 more</span>
         </div>
         <div class="mc-cta">
           Select
@@ -894,6 +897,23 @@ body {
         </div>
       </div>
 
+      <div class="mission-card mc-edge" onclick="selectMission('edge')">
+        <div class="mc-icon">◉</div>
+        <div class="mc-title">Edge AI / ML</div>
+        <div class="mc-desc">Find opportunities for small form factor AI systems, NVIDIA Jetson, on-body compute, and tactical edge AI/ML processing.</div>
+        <div class="mc-keywords">
+          <span class="chip c-amber" style="font-size:10px;">Edge AI</span>
+          <span class="chip c-amber" style="font-size:10px;">Edge ML</span>
+          <span class="chip c-amber" style="font-size:10px;">NVIDIA Jetson</span>
+          <span class="chip c-amber" style="font-size:10px;">On-Body Compute</span>
+          <span class="chip c-muted" style="font-size:10px;">+10 more</span>
+        </div>
+        <div class="mc-cta">
+          Select
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7.5 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
       <div class="mission-card mc-custom" onclick="selectMission('custom')">
         <div class="mc-icon">✦</div>
         <div class="mc-title">Custom Search</div>
@@ -908,7 +928,7 @@ body {
       </div>
 
     </div>
-    <div class="foot-note" style="margin-top:24px;">Want to preview? <a onclick="loadDemo('tak')">TAK demo</a> · <a onclick="loadDemo('pace')">Network/PACE demo</a></div>
+    <div class="foot-note" style="margin-top:24px;">Want to preview? <a onclick="loadDemo('tak')">TAK demo</a> · <a onclick="loadDemo('pace')">Network/PACE demo</a> · <a onclick="loadDemo('edge')">Edge AI/ML demo</a></div>
   </div>
 </div>
 
@@ -1013,7 +1033,7 @@ body {
                 spellcheck="false"
               />
             </div>
-            <div class="tag-hint">Press <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">Enter</kbd> or <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">,</kbd> to add · Backspace to remove last · Prefix with <kbd style="background:rgba(242,139,130,0.1);border:1px solid rgba(242,139,130,0.3);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--rose);">-</kbd> to <span style="color:var(--rose);">exclude</span> (e.g. <span style="color:var(--rose);">-training</span>)</div>
+            <div class="tag-hint">Press <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">Enter</kbd> or <kbd style="background:var(--bg3);border:1px solid var(--border-md);border-radius:4px;padding:1px 5px;font-size:10px;">,</kbd> to add · Exact whole-word match · Add variants separately (e.g. <em>ATAK, WinTAK</em>) · Prefix with <kbd style="background:rgba(242,139,130,0.1);border:1px solid rgba(242,139,130,0.3);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--rose);">-</kbd> to <span style="color:var(--rose);">exclude</span></div>
           </div>
           <div style="height:16px;"></div>
         </div>
@@ -1174,6 +1194,7 @@ const MISSIONS = {
     meta: "TAK opportunities",
     catLabel: "TAK capability categories",
     fileKeywords: [
+      "tak",
       "atak",
       "tak server",
       "tak x",
@@ -1186,7 +1207,7 @@ const MISSIONS = {
       "tak enterprise",
       "cursor on target"
     ],
-    apiKeywords: ["ATAK","TAK Server","TAK X","WinTAK","Team Awareness Kit","Android Team Awareness Kit"],
+    apiKeywords: ["TAK","ATAK","TAK Server","TAK X","WinTAK","Team Awareness Kit","Android Team Awareness Kit"],
     chipColor: "c-blue",
     claudePrompt: (slim) => `Classify these US federal contract opportunities for the TAK ecosystem (ATAK, TAK Server, TAK X, WinTAK). Return ONLY a raw JSON array — no markdown, no explanation.
 
@@ -1214,23 +1235,24 @@ ${JSON.stringify(slim)}`
     meta: "Network/PACE opportunities",
     catLabel: "Network/PACE capability categories",
     fileKeywords: [
-      // PACE planning & automation
+      // Standalone PACE — catches any record mentioning PACE as a program/concept
+      "pace",
+      // PACE planning & automation (specific)
       "pace plan", "pace planning", "pace communication",
       "primary alternate contingency emergency",
       "automated pace", "pace automation",
-      "communication plan", "comms plan", "contingency communication",
-      // Network optimization & data pathways
-      "network optimization", "network efficiency",
-      "data path", "data pathway", "automated data",
+      "contingency communication",
+      // Network optimization & data pathways (specific)
+      "network optimization",
+      "data pathway", "data pathways",
       "path optimization", "route optimization", "dynamic routing",
       "traffic optimization", "bandwidth optimization",
       "quality of service", "qos", "traffic prioritization",
       "data flow automation", "network automation",
       "autonomous routing", "self-healing network",
       "resilient communications", "communications resilience",
-      // Data management in comms context
-      "data aggregation", "data fusion", "data pipeline",
-      "edge processing", "edge compute", "edge network",
+      // Data pipeline & transport
+      "data pipeline",
       "data transport", "secure data transport"
     ],
     apiKeywords: [
@@ -1262,6 +1284,71 @@ Each object:
 
 ${JSON.stringify(slim)}`
   },
+  edge: {
+    label: "Edge AI / ML",
+    kicker: "Edge AI / ML Intelligence",
+    title: "Edge AI / ML Opportunities",
+    scanHeading: "Scanning for Edge AI / ML Opportunities…",
+    scanSub: "Filtering and analyzing tactical edge AI and ML opportunities",
+    meta: "Edge AI/ML opportunities",
+    catLabel: "Edge AI/ML capability categories",
+    fileKeywords: [
+      // Edge AI/ML — broad terms covering how different groups refer to it
+      "edge ai", "edge ml", "edge ai/ml", "edge a.i", "edge a.i.",
+      "edge machine learning", "edge artificial intelligence",
+      "edge inference", "edge processing", "edge compute", "edge computing",
+      "ai at the edge", "ml at the edge", "machine learning at the edge",
+      // Tactical / embedded AI
+      "tactical ai", "tactical ml", "tactical edge",
+      "embedded ai", "embedded ml", "embedded machine learning",
+      "embedded inference", "on-device inference",
+      "on-device ai", "on-device ml",
+      // Small form factor / wearable compute
+      "small form factor", "small form-factor",
+      "on-body compute", "on-body ai", "on-body ml",
+      "wearable ai", "wearable ml", "wearable compute",
+      "body-worn ai", "body-worn compute",
+      // NVIDIA Jetson and specific hardware
+      "nvidia jetson", "jetson nano", "jetson agx", "jetson xavier",
+      "jetson orin", "jetson nx",
+      // AI/ML accelerators and hardware
+      "neural processing unit", "npu",
+      "ai accelerator", "ml accelerator",
+      "ai chip", "inference chip",
+      "tensorrt", "cuda embedded",
+      // Low-power / lightweight AI
+      "low-power ai", "low-power ml",
+      "lightweight ai", "lightweight ml",
+      "compact ai", "compact ml",
+      // Autonomous / intelligent edge
+      "autonomous edge", "intelligent edge",
+      "ai enabled", "ai-enabled", "ml enabled", "ml-enabled",
+      "machine learning enabled", "artificial intelligence enabled"
+    ],
+    apiKeywords: [
+      "edge AI", "edge ML", "NVIDIA Jetson", "edge inference",
+      "tactical edge AI", "embedded AI", "small form factor AI",
+      "on-body compute", "AI accelerator"
+    ],
+    chipColor: "c-amber",
+    claudePrompt: (slim) => `Classify these US federal contract opportunities for edge AI/ML — small form factor artificial intelligence, tactical edge machine learning, embedded inference, and on-device AI processing. Return ONLY a raw JSON array — no markdown, no explanation.
+
+Each object:
+- "id": noticeId string
+- "category": exactly one of "Software" | "Hardware" | "Personnel" | "Purchase Equipment"
+  Software = edge AI/ML software, inference frameworks, model optimization, AI platforms
+  Hardware = edge compute devices, AI accelerators, NVIDIA Jetson systems, wearable compute, NPUs
+  Personnel = AI/ML engineers, data scientists, edge AI specialists, integration support
+  Purchase Equipment = COTS edge AI hardware, Jetson modules, AI accelerator procurement
+- "subcategory": e.g. "Edge Inference Software", "Edge AI Platform", "On-Device ML", "Embedded AI Integration", "Tactical AI", "NVIDIA Jetson", "AI Accelerator Hardware", "Wearable Compute", "Small Form Factor AI", "Edge AI Engineering", "ML Model Optimization", "COTS Edge AI Hardware"
+- "tak_types": array using "Edge AI" | "Edge ML" | "Embedded Inference" | "Tactical Edge" | "Small Form Factor" | "Wearable Compute" | "NVIDIA Jetson" | "AI Accelerator" (use all that apply, or ["General Edge AI"] if unclear)
+- "aiml_required": boolean — always true for this mission unless purely logistics/admin
+- "summary": 1-2 plain sentences describing what is needed
+- "relevance": 1-10 (10=directly focused on edge AI/ML hardware or software)
+
+${JSON.stringify(slim)}`
+  },
+
   custom: {
     label: "Custom Search",
     kicker: "Custom Intelligence",
@@ -1439,6 +1526,7 @@ function selectMission(m) {
   document.getElementById("setupTitle").innerHTML =
     m === "tak"    ? 'Scan SAM.gov for <em>TAK Opportunities</em>' :
     m === "pace"   ? 'Scan SAM.gov for <em>Network / PACE Opportunities</em>' :
+    m === "edge"   ? 'Scan SAM.gov for <em>Edge AI / ML Opportunities</em>' :
                      'Scan SAM.gov with <em>Custom Keywords</em>';
   document.getElementById("setupDesc").textContent =
     m === "custom"
@@ -1679,7 +1767,7 @@ async function startFileScan() {
     }
 
     // Filter — targeted fields, stemmed matching, negative keyword exclusion
-    const matched = await filterRelevant(records, cfg.fileKeywords);
+    const matched = await filterRelevant(records, cfg.fileKeywords, S.mission);
     const negKws = cfg.fileKeywords.filter(k => k.startsWith("-"));
     if (negKws.length) log(`Negative keywords active: ${negKws.map(k=>k.slice(1)).join(", ")}`, "info");
 
@@ -1893,10 +1981,11 @@ const STEM_RULES = [
   [/ated$/i,       "at"],  // automated  → automat
   [/ation$/i,      "at"],  // automation → automat
   [/atic$/i,       "at"],  // automatic  → automat
+  [/ate$/i,        "at"],  // automate   → automat  ← catches bare -ate form
   [/izing$/i,      "iz"],  // optimizing → optimiz
   [/ized$/i,       "iz"],  // optimized  → optimiz
-  [/izes$/i,       "iz"],
-  [/izing$/i,      "iz"],
+  [/izes$/i,       "iz"],  // optimizes  → optimiz
+  [/ize$/i,        "iz"],  // optimize   → optimiz  ← catches bare -ize form
   [/ments?$/i,     ""],    // improvement → improv
   [/ments$/i,      ""],
   [/ing$/i,        ""],    // routing → rout
@@ -1924,33 +2013,28 @@ function stemKeyword(kw) {
   return kw.split(/\s+/).map(stemWord).join(" ");
 }
 
-// Build regex matchers for a keyword list, with stemming applied.
-// Stemmed words use a prefix match (stem\w*) to catch all suffixed variants.
-// Returns array of { rx, original, stemmed } objects.
+// Build regex matchers for a keyword list.
+// Always uses exact word-boundary matching — no stemming, no suffix expansion.
+// This is predictable: "ATAK" matches only "ATAK", "tak server" matches only
+// "TAK Server", "atak[a-z]*" false positives like "Ataki" are impossible.
+// Users who want variants type them explicitly (e.g. "optimize, optimization").
 function buildMatchers(keywords) {
   return keywords
     .filter(kw => kw && !kw.startsWith("-"))
     .map(kw => {
-      const words = kw.toLowerCase().split(/\s+/);
-      const pattern = words.map(word => {
-        const stemmed = stemWord(word);
-        const escaped = stemmed.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        // Stemmed words: append [a-z]* to match any suffix form
-        // Unstemmed words ≥5 chars: also append [a-z]* to catch plurals / short suffixes
-        // Short words / acronyms (<5 chars, e.g. ATAK, PACE, TAK): exact match only
-        const allowSuffix = stemmed !== word || word.length >= 4;
-        return allowSuffix ? escaped + "[a-z]*" : escaped;
-      }).join("\\s+");
-
+      const pattern = kw.toLowerCase()
+        .split(/\s+/)
+        .map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("\\s+");
       return {
         original: kw,
-        stemmed:  words.map(stemWord).join(" "),
         rx: new RegExp("(?<![a-zA-Z0-9])" + pattern + "(?![a-zA-Z0-9])", "i")
       };
     });
 }
 
-// Build matchers for negative keywords (those prefixed with -)
+// Negative keyword matchers — use light stemming (just plurals) so
+// -training catches "trainer" and "trained" but not unrelated words.
 function buildNegativeMatchers(keywords) {
   return keywords
     .filter(kw => kw && kw.startsWith("-") && kw.length > 1)
@@ -1963,10 +2047,8 @@ function buildNegativeMatchers(keywords) {
         const allowSuffix = stemmed !== word || word.length >= 4;
         return allowSuffix ? escaped + "[a-z]*" : escaped;
       }).join("\\s+");
-
       return {
         original: term,
-        stemmed:  words.map(stemWord).join(" "),
         rx: new RegExp("(?<![a-zA-Z0-9])" + pattern + "(?![a-zA-Z0-9])", "i")
       };
     });
@@ -1983,8 +2065,8 @@ function buildSearchString(r) {
   return parts.join(" ");
 }
 
-// Chunked filter — uses targeted fields + stemmed matchers + negative keyword exclusion
-async function filterRelevant(records, keywords) {
+// Chunked filter — uses targeted fields + mission-appropriate matchers + negative keyword exclusion
+async function filterRelevant(records, keywords, mission) {
   const CHUNK = 2000;
   const positiveMatchers = buildMatchers(keywords);
   const negativeMatchers = buildNegativeMatchers(keywords);
@@ -2243,6 +2325,16 @@ function inferTypes(r, mission) {
     if (/resilien|self.heal/.test(text)) types.push("Communications Resilience");
     if (/edge.*process/.test(text)) types.push("Edge Processing");
     if (types.length === 0) types.push("General PACE");
+  } else if (mission === "edge") {
+    if (/nvidia\s+jetson|jetson\s+(nano|agx|xavier|orin|nx)/i.test(text)) types.push("NVIDIA Jetson");
+    if (/on.body|wearable\s+(ai|ml|compute)|body.worn/i.test(text)) types.push("Wearable Compute");
+    if (/small\s+form.factor/i.test(text)) types.push("Small Form Factor");
+    if (/edge\s+(ai|a\.i)/i.test(text)) types.push("Edge AI");
+    if (/edge\s+(ml|machine\s+learning)/i.test(text)) types.push("Edge ML");
+    if (/embedded\s+(ai|ml|inference)|on.device/i.test(text)) types.push("Embedded Inference");
+    if (/tactical\s+(ai|ml|edge)/i.test(text)) types.push("Tactical Edge");
+    if (/ai\s+accelerator|ml\s+accelerator|npu|neural\s+processing/i.test(text)) types.push("AI Accelerator");
+    if (types.length === 0) types.push("General Edge AI");
   } else {
     types.push("Custom Search");
   }
@@ -2527,7 +2619,7 @@ function renderDash(total, isDemo, source) {
     {v:highN,   l:"High match",        cls:"v-green"},
     {v:medN,    l:"Medium match",      cls:"v-amber"},
     {v:aiml,    l:"AI/ML required",    cls:"v-amber"},
-    {v:types.length, l: S.mission==="tak" ? "TAK platforms" : S.mission==="pace" ? "Network types" : "Keyword types", cls:"v-accent"},
+    {v:types.length, l: S.mission==="tak" ? "TAK platforms" : S.mission==="pace" ? "Network types" : S.mission==="edge" ? "Edge AI types" : "Keyword types", cls:"v-accent"},
   ];
   document.getElementById("statsGrid").innerHTML = statsData.map((s,i)=>`
     <div class="stat-tile appear d${i+1}">
@@ -2537,8 +2629,8 @@ function renderDash(total, isDemo, source) {
 
   // Match confidence bands
   const bandDesc = {
-    high: S.mission==="tak" ? "Explicitly TAK-focused" : S.mission==="pace" ? "Explicitly PACE/Network-focused" : "Explicitly matches your keywords",
-    med:  S.mission==="tak" ? "TAK-adjacent or implied"  : S.mission==="pace" ? "Network-adjacent or implied"     : "Partially matches your keywords",
+    high: S.mission==="tak" ? "Explicitly TAK-focused" : S.mission==="pace" ? "Explicitly PACE/Network-focused" : S.mission==="edge" ? "Explicitly Edge AI/ML-focused" : "Explicitly matches your keywords",
+    med:  S.mission==="tak" ? "TAK-adjacent or implied"  : S.mission==="pace" ? "Network-adjacent or implied" : S.mission==="edge" ? "Edge AI/ML-adjacent or implied" : "Partially matches your keywords",
     low:  "Loosely related, review manually"
   };
   const bands = [
@@ -2604,7 +2696,7 @@ function renderDash(total, isDemo, source) {
         ${subcats.map(s=>`<span class="chip ${meta.chipCls}" style="font-size:10px;">${s}</span>`).join("")}
         ${allSubs.length>subcats.length?`<span class="chip c-muted" style="font-size:10px;">+${allSubs.length-subcats.length} more</span>`:""}
       </div>`:""}
-      ${types.length?`<div class="ct-sublabel" style="margin-top:10px;">${S.mission==="tak"?"TAK systems":S.mission==="pace"?"Network types":"Keyword types"}</div><div class="ct-chips">
+      ${types.length?`<div class="ct-sublabel" style="margin-top:10px;">${S.mission==="tak"?"TAK systems":S.mission==="pace"?"Network types":S.mission==="edge"?"Edge AI types":"Keyword types"}</div><div class="ct-chips">
         ${types.map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
       </div>`:""}
       <div class="ct-footer">
@@ -2797,7 +2889,7 @@ function openModal(id) {
       <div class="mf"><div class="mf-lbl">Category</div><div class="mf-val"><span class="chip ${chipCls}">${cat}</span></div></div>
       <div class="mf"><div class="mf-lbl">Subcategory</div><div class="mf-val">${opp.subcategory||"—"}</div></div>
     </div>
-    <div class="mf"><div class="mf-lbl">${S.mission==="tak"?"TAK Systems Referenced":S.mission==="pace"?"Network / PACE Types":"Matched Keywords"}</div><div class="mf-val" style="display:flex;gap:4px;flex-wrap:wrap;">
+    <div class="mf"><div class="mf-lbl">${S.mission==="tak"?"TAK Systems Referenced":S.mission==="pace"?"Network / PACE Types":S.mission==="edge"?"Edge AI / ML Types":"Matched Keywords"}</div><div class="mf-val" style="display:flex;gap:4px;flex-wrap:wrap;">
       ${(opp.tak_types||[]).map(t=>`<span class="chip c-accent">${t}</span>`).join("")||`<span style="color:var(--text-3);">None specified</span>`}
     </div></div>
     <div class="m2">

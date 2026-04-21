@@ -2576,8 +2576,25 @@ function loadDemo(mission) {
 }
 
 // ─────────────────────────────────────────────
-// RENDER DASHBOARD
+// DEADLINE STATUS
 // ─────────────────────────────────────────────
+
+function deadlineStatus(raw) {
+  if (!raw || String(raw).trim() === "" || String(raw).trim() === "—") {
+    return { label: "Unknown", expired: null, color: "var(--text-3)", chip: "c-muted" };
+  }
+  const d = new Date(String(raw).trim());
+  if (isNaN(d.getTime())) {
+    return { label: "Unknown", expired: null, color: "var(--text-3)", chip: "c-muted" };
+  }
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const expired = d < today;
+  const dateStr = String(raw).trim().slice(0, 10);
+  return expired
+    ? { label: `Expired ${dateStr}`, expired: true,  color: "var(--rose)",  chip: "c-rose"  }
+    : { label: `Closes ${dateStr}`,  expired: false, color: "var(--green)", chip: "c-green" };
+}
 
 // ─────────────────────────────────────────────
 // MATCH LEVEL HELPERS
@@ -2759,6 +2776,7 @@ function renderMatchOppList(opps) {
     const cat = o.category||"Software";
     const chipCls = CAT[cat]?.chipCls||"c-muted";
     const lvl = matchLevel(o);
+    const dl  = deadlineStatus(o.responseDeadLine);
     return `
     <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
       <div style="display:flex;align-items:flex-start;gap:8px;">
@@ -2768,13 +2786,13 @@ function renderMatchOppList(opps) {
           <div class="opp-meta">
             <span class="opp-agency">${(o.fullParentPathName||"").split(">").pop()?.trim()||"Unknown"}</span>
             ${o.postedDate?`<span class="opp-dot">·</span><span class="opp-date">Posted: ${String(o.postedDate).slice(0,10)}</span>`:""}
-            ${o.responseDeadLine?`<span class="opp-dot">·</span><span class="opp-date" style="color:var(--amber);">Ends: ${String(o.responseDeadLine).slice(0,10)}</span>`:""}
           </div>
           <div class="opp-chips">
             <span class="chip ${chipCls}" style="font-size:10px;">${cat}</span>
             <span class="chip ${chipCls}" style="font-size:10px;">${o.subcategory||(S.mission==="pace"?"PACE/Network":S.mission==="custom"?"Matched Opportunity":"TAK Capability")}</span>
             ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
             ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
+            <span class="chip ${dl.chip}" style="font-size:10px;">${dl.expired===true?"⛔ ":""}${dl.label}</span>
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
@@ -2828,6 +2846,7 @@ function renderOppList(opps,chipCls) {
   el.innerHTML=sorted.map(o=>{
     const lvl=matchLevel(o);
     const scoreColor=lvl==="high"?"var(--green)":lvl==="med"?"var(--amber)":"var(--text-3)";
+    const dl=deadlineStatus(o.responseDeadLine);
     return `
     <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
       <div style="display:flex;align-items:flex-start;gap:8px;">
@@ -2837,12 +2856,12 @@ function renderOppList(opps,chipCls) {
           <div class="opp-meta">
             <span class="opp-agency">${(o.fullParentPathName||"").split(">").pop()?.trim()||"Unknown"}</span>
             ${o.postedDate?`<span class="opp-dot">·</span><span class="opp-date">Posted: ${String(o.postedDate).slice(0,10)}</span>`:""}
-            ${o.responseDeadLine?`<span class="opp-dot">·</span><span class="opp-date" style="color:var(--amber);">Ends: ${String(o.responseDeadLine).slice(0,10)}</span>`:""}
           </div>
           <div class="opp-chips">
             <span class="chip ${chipCls}" style="font-size:10px;">${o.subcategory||(S.mission==="pace"?"PACE/Network":S.mission==="custom"?"Matched Opportunity":"TAK Capability")}</span>
             ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
             ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
+            <span class="chip ${dl.chip}" style="font-size:10px;">${dl.expired===true?"⛔ ":""}${dl.label}</span>
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
@@ -2898,7 +2917,7 @@ function openModal(id) {
     </div>
     <div class="m2">
       <div class="mf"><div class="mf-lbl">Posted</div><div class="mf-val">${opp.postedDate?String(opp.postedDate).slice(0,10):"—"}</div></div>
-      <div class="mf"><div class="mf-lbl">Response Deadline</div><div class="mf-val" style="${opp.responseDeadLine?"color:var(--amber);font-weight:500;":""}">${opp.responseDeadLine?String(opp.responseDeadLine).slice(0,10):"—"}</div></div>
+      <div class="mf"><div class="mf-lbl">Response Deadline</div><div class="mf-val">${(()=>{const dl=deadlineStatus(opp.responseDeadLine);return `<span style="color:${dl.color};font-weight:${dl.expired!==null?'500':'400'};">${dl.expired===true?"⛔ ":""}${dl.label}</span>`;})()}</div></div>
     </div>
     <div class="m2">
       <div class="mf"><div class="mf-lbl">Solicitation No.</div><div class="mf-val" style="font-size:12px;font-family:monospace;">${opp.solicitationNumber||"—"}</div></div>

@@ -2115,10 +2115,10 @@ function normalizeRecord(r) {
   // Type — API: type | CSV: Type → type
   const type = pick("type", "Type", "noticeType", "notice_type", "base_type", "baseType") || "";
 
-  // Posted date — API: postedDate | CSV: Posted Date → posted_date
+  // Posted date — API: postedDate | CSV: PostedDate → posteddate
   const postedDate = pick(
-    "postedDate", "posted_date", "PostedDate",
-    "publishDate", "publish_date", "date", "Date"
+    "postedDate", "posted_date", "PostedDate", "posteddate",
+    "publishDate", "publish_date", "publishdate", "date", "Date"
   ) || "";
 
   // Organisation path — API: fullParentPathName | CSV: need to build from columns
@@ -2149,12 +2149,16 @@ function normalizeRecord(r) {
   const naics = pick("naicsCode", "naics_code", "naics", "NAICS", "naics_code_desc") || "";
   const psc   = pick("classificationCode", "classification_code", "psc_code", "fpds_code", "ClassificationCode") || "";
 
-  // Response deadline / end date
+  // Response deadline — API: responseDeadLine | CSV: ResponseDeadLine → responsedeadline
   const responseDeadLine = pick(
-    "responseDeadLine", "response_deadline", "response_dead_line",
-    "rdl", "deadline", "due_date", "dueDate",
-    "archiveDate", "archive_date",
-    "inactive_date", "inactiveDate"
+    "responseDeadLine",    // JSON API
+    "responsedeadline",    // CSV: "ResponseDeadLine" → all-lowercase (the real one)
+    "response_deadline",   // CSV: "Response Deadline" → with underscore
+    "response_dead_line",
+    "rdl", "deadline",
+    "due_date", "dueDate", "duedate",
+    "archiveDate", "archive_date", "archivedate",
+    "inactive_date", "inactiveDate", "inactivedate"
   ) || "";
 
   return { noticeId, title, type, postedDate, responseDeadLine, fullParentPathName: org, description: desc, solicitationNumber: solNum, uiLink: link, naicsCode: naics, classificationCode: psc };
@@ -2751,6 +2755,8 @@ function openMatchDrawer(level) {
     ${Object.entries(catCounts).map(([c,n])=>
       `<button class="fpill" onclick="filterMatchDrw('${esc(c)}',this)">${c} (${n})</button>`).join("")}
     ${filtered.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterMatchDrw('AIML',this)">⚡ AI/ML</button>`:""}
+    <button class="fpill" onclick="filterMatchDrw('HIDE_EXPIRED',this)">Hide Expired</button>
+    <button class="fpill" onclick="filterMatchDrw('HIDE_UNKNOWN',this)">Hide Unknown</button>
   `;
 
   renderMatchOppList(filtered);
@@ -2762,16 +2768,36 @@ function filterMatchDrw(val, btn) {
   btn.classList.add("active");
   const level = S.activeMatchLevel;
   let opps = Object.values(S.cats).flat().filter(o => matchLevel(o) === level);
-  if (val === "AIML") opps = opps.filter(o=>o.aiml_required);
-  else if (val !== "ALL") opps = opps.filter(o=>o.category === val);
+  if      (val === "AIML")         opps = opps.filter(o=>o.aiml_required);
+  else if (val === "HIDE_EXPIRED") opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
+  else if (val === "HIDE_UNKNOWN") opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
+  else if (val !== "ALL")          opps = opps.filter(o=>o.category === val);
   renderMatchOppList(opps);
+}
+
+// Sort by response deadline ascending: active soonest → expired → unknown
+function sortByDeadline(opps) {
+  return [...opps].sort((a, b) => {
+    const dlA = deadlineStatus(a.responseDeadLine);
+    const dlB = deadlineStatus(b.responseDeadLine);
+    // unknowns (null) go last
+    if (dlA.expired === null && dlB.expired !== null) return 1;
+    if (dlB.expired === null && dlA.expired !== null) return -1;
+    if (dlA.expired === null && dlB.expired === null) return 0;
+    // expired go after active
+    if (dlA.expired && !dlB.expired) return 1;
+    if (!dlA.expired && dlB.expired) return -1;
+    // both active or both expired — sort by date ascending
+    const dA = new Date(String(a.responseDeadLine).trim());
+    const dB = new Date(String(b.responseDeadLine).trim());
+    return dA - dB;
+  });
 }
 
 function renderMatchOppList(opps) {
   const el = document.getElementById("drwBody");
   if (!opps.length) { el.innerHTML='<div class="empty-state">No opportunities match this filter.</div>'; return; }
-  // Sort by relevance desc
-  const sorted = [...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
+  const sorted = sortByDeadline(opps);
   el.innerHTML = sorted.map(o => {
     const cat = o.category||"Software";
     const chipCls = CAT[cat]?.chipCls||"c-muted";
@@ -2818,6 +2844,8 @@ function openDrawer(cat) {
     <button class="fpill" onclick="filterDrw('LOW',this)">● Low (${opps.filter(o=>matchLevel(o)==="low").length})</button>
     ${subcats.map(s=>`<button class="fpill" onclick="filterDrw('SC:${esc(s)}',this)">${s}</button>`).join("")}
     ${opps.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterDrw('AIML',this)">⚡ AI/ML</button>`:""}
+    <button class="fpill" onclick="filterDrw('HIDE_EXPIRED',this)">Hide Expired</button>
+    <button class="fpill" onclick="filterDrw('HIDE_UNKNOWN',this)">Hide Unknown</button>
   `;
   renderOppList(opps,meta.chipCls);
   document.getElementById("drawer").classList.add("open");
@@ -2828,21 +2856,22 @@ function filterDrw(val,btn) {
   btn.classList.add("active");
   const cat = S.activeCat;
   const meta = CAT[cat];
-  if (!meta) return; // guard: shouldn't happen but prevents crash
+  if (!meta) return;
   let opps = S.cats[cat]||[];
-  if      (val==="AIML") opps=opps.filter(o=>o.aiml_required);
-  else if (val==="HIGH") opps=opps.filter(o=>matchLevel(o)==="high");
-  else if (val==="MED")  opps=opps.filter(o=>matchLevel(o)==="med");
-  else if (val==="LOW")  opps=opps.filter(o=>matchLevel(o)==="low");
+  if      (val==="AIML")         opps=opps.filter(o=>o.aiml_required);
+  else if (val==="HIGH")         opps=opps.filter(o=>matchLevel(o)==="high");
+  else if (val==="MED")          opps=opps.filter(o=>matchLevel(o)==="med");
+  else if (val==="LOW")          opps=opps.filter(o=>matchLevel(o)==="low");
+  else if (val==="HIDE_EXPIRED") opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
+  else if (val==="HIDE_UNKNOWN") opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
   else if (val.startsWith("SC:")) opps=opps.filter(o=>o.subcategory===val.slice(3));
-  opps = [...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
   renderOppList(opps, meta.chipCls);
 }
 
 function renderOppList(opps,chipCls) {
   const el=document.getElementById("drwBody");
   if(!opps.length){el.innerHTML='<div class="empty-state">No opportunities match this filter.</div>';return;}
-  const sorted=[...opps].sort((a,b)=>(b.relevance||0)-(a.relevance||0));
+  const sorted=sortByDeadline(opps);
   el.innerHTML=sorted.map(o=>{
     const lvl=matchLevel(o);
     const scoreColor=lvl==="high"?"var(--green)":lvl==="med"?"var(--amber)":"var(--text-3)";

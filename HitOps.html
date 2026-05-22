@@ -276,6 +276,7 @@ body {
 .c-blue   { color: var(--blue);         border-color: rgba(138,180,248,0.28);  background: var(--blue-bg); }
 .c-rose   { color: var(--rose);         border-color: rgba(242,139,130,0.28);  background: var(--rose-bg); }
 .c-teal   { color: var(--teal);         border-color: rgba(120,217,226,0.28);  background: var(--teal-bg); }
+.c-purple  { color: var(--purple);       border-color: rgba(208,188,255,0.28);  background: var(--purple-bg); }
 .c-muted  { color: var(--text-3);       border-color: var(--border); background: transparent; }
 
 /* ── MD3 FILLED BUTTON ── */
@@ -815,7 +816,187 @@ body {
 }
 .info-box svg { flex-shrink:0; margin-top:2px; color:var(--accent-light); }
 
-/* ── SCROLLBAR ── */
+/* ── SETTINGS PANEL ── */
+.settings-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(138,180,248,0.06);
+  border: 1px solid rgba(138,180,248,0.2);
+  border-radius: var(--r-full);
+  padding: 5px 14px 5px 10px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  color: var(--text-2); cursor: pointer; letter-spacing: 0.02em;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.settings-btn:hover { background: rgba(138,180,248,0.12); border-color: rgba(138,180,248,0.4); color: var(--accent-light); }
+
+.settings-panel {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 560px;
+  height: 100vh; max-height: 100vh;
+  background: var(--bg1); border-right: 1px solid var(--border-md);
+  z-index: 300; display: flex; flex-direction: column;
+  transform: translateX(-100%); transition: transform 0.32s cubic-bezier(0.2,0,0,1);
+  box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.settings-panel.open { transform: translateX(0); }
+@media (max-width: 600px) { .settings-panel { width: 100%; } }
+
+.settings-panel-hd {
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-shrink: 0;
+}
+.settings-panel-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.settings-panel-title { font-family: var(--display); font-size: 18px; font-weight: 500; color: var(--accent-light); }
+.settings-panel-sub { font-size: 12px; color: var(--text-3); line-height: 1.55; }
+
+.settings-panel-body {
+  flex: 1; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 20px; display: flex; flex-direction: column; gap: 20px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.settings-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  background: var(--bg2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.settings-saved-msg {
+  font-size: 12px; color: var(--green);
+  opacity: 0; transition: opacity 0.3s;
+}
+.settings-saved-msg.show { opacity: 1; }
+
+.settings-section {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+}
+.settings-section-hd {
+  padding: 14px 18px 12px; border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.settings-section-title {
+  font-family: var(--display); font-size: 14px; font-weight: 500; margin-bottom: 2px;
+}
+.settings-section-sub { font-size: 11px; color: var(--text-3); }
+.settings-section-body { padding: 16px 18px; }
+
+/* Settings keyword box */
+.settings-kw-wrap {
+  background: var(--bg1); border: 1px solid var(--border-md);
+  border-radius: var(--r); padding: 8px 10px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  align-items: center; min-height: 48px; cursor: text;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.settings-kw-wrap:focus-within {
+  border-color: var(--accent-light); box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.prod-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(208,188,255,0.08);
+  border: 1px solid rgba(208,188,255,0.25);
+  border-radius: var(--r-full);
+  padding: 5px 14px 5px 10px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  color: var(--purple); cursor: pointer; letter-spacing: 0.02em;
+  transition: background 0.15s, border-color 0.15s;
+}
+.prod-btn:hover { background: rgba(208,188,255,0.14); border-color: rgba(208,188,255,0.45); }
+.prod-btn-count {
+  background: var(--purple); color: #1a1c1e;
+  border-radius: var(--r-full); padding: 1px 6px;
+  font-size: 10px; font-weight: 700; min-width: 18px; text-align: center;
+}
+
+.prod-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 520px;
+  background: var(--bg1); border-left: 1px solid var(--border-md);
+  z-index: 300; display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.32s cubic-bezier(0.2,0,0,1);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.4);
+}
+.prod-panel.open { transform: translateX(0); }
+@media (max-width: 560px) { .prod-panel { width: 100%; } }
+
+.prod-panel-hd {
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--border);
+  background: var(--bg2); flex-shrink: 0;
+}
+.prod-panel-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.prod-panel-title { font-family: var(--display); font-size: 18px; font-weight: 500; color: var(--purple); }
+.prod-panel-sub { font-size: 12px; color: var(--text-3); }
+.prod-panel-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+.prod-panel-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 16px; display: flex; flex-direction: column; gap: 12px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+/* Product card */
+.prod-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color 0.15s;
+}
+.prod-card:hover { border-color: var(--border-md); }
+.prod-card-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px; gap: 10px;
+}
+.prod-card-name {
+  font-family: var(--display); font-size: 15px; font-weight: 500;
+  color: var(--text-1); flex: 1; min-width: 0;
+}
+.prod-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.prod-card-body { padding: 0 16px 14px; }
+.prod-card-desc { font-size: 12px; color: var(--text-3); margin-bottom: 10px; line-height: 1.55; }
+.prod-card-kws { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* Product edit form */
+.prod-form {
+  background: var(--bg2); border: 1px solid rgba(208,188,255,0.28);
+  border-radius: var(--r-lg); padding: 18px;
+}
+.prod-form-title {
+  font-family: var(--display); font-size: 14px; font-weight: 500;
+  color: var(--purple); margin-bottom: 14px;
+}
+.prod-form .field { margin-bottom: 14px; }
+.prod-form .field:last-of-type { margin-bottom: 0; }
+.prod-form-btns { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+/* Match badge on opp cards */
+.prod-match-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: var(--r-xs);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap;
+}
+.pmb-strong  { background: rgba(208,188,255,0.12); border: 1px solid rgba(208,188,255,0.3); color: var(--purple); }
+.pmb-partial { background: rgba(208,188,255,0.06); border: 1px solid rgba(208,188,255,0.18); color: rgba(208,188,255,0.7); }
+
+/* Import/export buttons */
+.btn-sm {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid var(--border-md);
+  border-radius: var(--r-full); padding: 6px 14px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500;
+  color: var(--text-2); cursor: pointer; letter-spacing: 0.02em;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.btn-sm:hover { border-color: var(--border-hi); background: rgba(255,255,255,0.04); color: var(--text-1); }
+.btn-sm.btn-purple {
+  border-color: rgba(208,188,255,0.28); color: var(--purple);
+  background: rgba(208,188,255,0.06);
+}
+.btn-sm.btn-purple:hover { background: rgba(208,188,255,0.14); border-color: rgba(208,188,255,0.5); }
+
+.prod-empty {
+  text-align: center; padding: 48px 24px;
+  color: var(--text-3); font-size: 13px; line-height: 1.7;
+}
+.prod-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+
 ::-webkit-scrollbar { width:4px;height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--bg4);border-radius:var(--r-full); }
@@ -847,9 +1028,121 @@ body {
   <div class="logo-divider"></div>
   <span class="logo-sub">SAM.gov Opportunity Intelligence</span>
   <div class="header-right">
+    <button class="settings-btn" onclick="toggleSettingsPanel()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 1v1.5M6.5 10.5V12M1 6.5h1.5M10.5 6.5H12M2.4 2.4l1.1 1.1M9.5 9.5l1.1 1.1M9.5 3.5L8.4 4.6M3.5 9.5L2.4 10.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Search Settings
+    </button>
+    <button class="prod-btn" onclick="toggleProductsPanel()">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1.5" y="1.5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="7.5" y="1.5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1.5" y="7.5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="7.5" y="7.5" width="4" height="4" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+      My Products
+      <span class="prod-btn-count" id="prodBtnCount">0</span>
+    </button>
     <div class="badge-live"><span class="dot-pulse"></span> Live</div>
   </div>
 </header>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-panel-hd">
+    <div class="settings-panel-top">
+      <div class="settings-panel-title">Search Settings</div>
+      <button class="icon-btn" onclick="toggleSettingsPanel()">✕</button>
+    </div>
+    <div class="settings-panel-sub">Customise the keywords used for each search mission. Changes take effect on the next scan. Use the Reset button to restore the built-in defaults.</div>
+  </div>
+
+  <div class="settings-panel-body" id="settingsPanelBody">
+    <!-- TAK Section -->
+    <div class="settings-section">
+      <div class="settings-section-hd">
+        <div class="settings-section-title" style="color:var(--blue);">◈ TAK Capability</div>
+        <div class="settings-section-sub">Keywords searched across all fields in each opportunity. Exact whole-word match, case-insensitive.</div>
+      </div>
+      <div class="settings-section-body">
+        <div class="settings-kw-wrap" id="takKwWrap" onclick="document.getElementById('takKwInput').focus()">
+          <div id="takKwList" style="display:contents;"></div>
+          <input id="takKwInput" class="tag-input-field" placeholder="Add keyword, press Enter or , …" autocomplete="off" spellcheck="false"/>
+        </div>
+        <div class="tag-hint" style="margin-top:8px;">Backspace to remove last · Exact match only · e.g. <em>tak, atak, wintak, tak server</em></div>
+        <div style="margin-top:10px;"><button class="btn-sm" onclick="resetSettingsSection('tak')">↺ Reset to defaults</button></div>
+      </div>
+    </div>
+
+    <!-- PACE Section -->
+    <div class="settings-section">
+      <div class="settings-section-hd">
+        <div class="settings-section-title" style="color:var(--purple);">⬡ Network / PACE</div>
+        <div class="settings-section-sub">Keywords for PACE planning, network optimization, and data pathway opportunities.</div>
+      </div>
+      <div class="settings-section-body">
+        <div class="settings-kw-wrap" id="paceKwWrap" onclick="document.getElementById('paceKwInput').focus()">
+          <div id="paceKwList" style="display:contents;"></div>
+          <input id="paceKwInput" class="tag-input-field" placeholder="Add keyword, press Enter or , …" autocomplete="off" spellcheck="false"/>
+        </div>
+        <div class="tag-hint" style="margin-top:8px;">Backspace to remove last · Exact match only · e.g. <em>pace plan, automated pace, network optimization</em></div>
+        <div style="margin-top:10px;"><button class="btn-sm" onclick="resetSettingsSection('pace')">↺ Reset to defaults</button></div>
+      </div>
+    </div>
+
+    <!-- Edge AI/ML Section -->
+    <div class="settings-section">
+      <div class="settings-section-hd">
+        <div class="settings-section-title" style="color:var(--amber);">◆ Edge AI / ML</div>
+        <div class="settings-section-sub">Keywords for tactical edge AI, embedded inference, small form factor compute, and on-device ML opportunities.</div>
+      </div>
+      <div class="settings-section-body">
+        <div class="settings-kw-wrap" id="edgeKwWrap" onclick="document.getElementById('edgeKwInput').focus()">
+          <div id="edgeKwList" style="display:contents;"></div>
+          <input id="edgeKwInput" class="tag-input-field" placeholder="Add keyword, press Enter or , …" autocomplete="off" spellcheck="false"/>
+        </div>
+        <div class="tag-hint" style="margin-top:8px;">Backspace to remove last · Exact match only · e.g. <em>edge ai, tactical edge, embedded inference, nvidia jetson</em></div>
+        <div style="margin-top:10px;"><button class="btn-sm" onclick="resetSettingsSection('edge')">↺ Reset to defaults</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-footer">
+    <span class="settings-saved-msg" id="settingsSavedMsg">✓ Settings saved</span>
+    <div style="display:flex;gap:8px;margin-left:auto;">
+      <button class="btn-sm" onclick="resetAllSettings()">↺ Reset all defaults</button>
+      <button class="btn-sm btn-purple" onclick="saveSettings()">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save Settings
+      </button>
+    </div>
+  </div>
+</div>
+<div id="settingsPanelScrim" onclick="toggleSettingsPanel()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:299;"></div>
+
+<!-- PRODUCTS PANEL -->
+<div class="prod-panel" id="productsPanel">
+  <div class="prod-panel-hd">
+    <div class="prod-panel-top">
+      <div class="prod-panel-title">My Products</div>
+      <button class="icon-btn" onclick="toggleProductsPanel()">✕</button>
+    </div>
+    <div class="prod-panel-sub">Add your products and their capabilities. Hit Ops will show which opportunities are the best fit.</div>
+    <div class="prod-panel-actions">
+      <button class="btn-sm btn-purple" onclick="showAddProductForm()">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add Product
+      </button>
+      <button class="btn-sm" onclick="exportProductsCSV()">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v6M3 5l2.5 2.5L8 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 9h9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Export CSV
+      </button>
+      <label class="btn-sm" style="cursor:pointer;">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 8V2M3 4l2.5-2.5L8 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 9h9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Import CSV
+        <input type="file" id="prodImportInput" accept=".csv" style="display:none;" onchange="importProductsCSV(event)"/>
+      </label>
+    </div>
+  </div>
+  <div class="prod-panel-body" id="prodPanelBody">
+    <!-- populated by renderProductsPanel() -->
+  </div>
+</div>
+<div id="prodPanelScrim" onclick="toggleProductsPanel()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:299;"></div>
 
 <!-- MISSION PICKER -->
 <div id="missionView" style="display:flex;justify-content:center;width:100%;">
@@ -2755,6 +3048,7 @@ function openMatchDrawer(level) {
     ${Object.entries(catCounts).map(([c,n])=>
       `<button class="fpill" onclick="filterMatchDrw('${esc(c)}',this)">${c} (${n})</button>`).join("")}
     ${filtered.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterMatchDrw('AIML',this)">⚡ AI/ML</button>`:""}
+    ${loadProducts().length>0?`<button class="fpill" style="border-color:rgba(208,188,255,0.3);color:var(--purple);" onclick="filterMatchDrw('PRODUCT_MATCH',this)">◈ Product Match</button>`:""}
     <button class="fpill" onclick="filterMatchDrw('HIDE_EXPIRED',this)">Hide Expired</button>
     <button class="fpill" onclick="filterMatchDrw('HIDE_UNKNOWN',this)">Hide Unknown</button>
   `;
@@ -2768,10 +3062,11 @@ function filterMatchDrw(val, btn) {
   btn.classList.add("active");
   const level = S.activeMatchLevel;
   let opps = Object.values(S.cats).flat().filter(o => matchLevel(o) === level);
-  if      (val === "AIML")         opps = opps.filter(o=>o.aiml_required);
-  else if (val === "HIDE_EXPIRED") opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
-  else if (val === "HIDE_UNKNOWN") opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
-  else if (val !== "ALL")          opps = opps.filter(o=>o.category === val);
+  if      (val === "AIML")          opps = opps.filter(o=>o.aiml_required);
+  else if (val === "PRODUCT_MATCH") opps = opps.filter(o=>bestProductMatch(o) !== null);
+  else if (val === "HIDE_EXPIRED")  opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
+  else if (val === "HIDE_UNKNOWN")  opps = opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
+  else if (val !== "ALL")           opps = opps.filter(o=>o.category === val);
   renderMatchOppList(opps);
 }
 
@@ -2803,6 +3098,7 @@ function renderMatchOppList(opps) {
     const chipCls = CAT[cat]?.chipCls||"c-muted";
     const lvl = matchLevel(o);
     const dl  = deadlineStatus(o.responseDeadLine);
+    const pm  = bestProductMatch(o);
     return `
     <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
       <div style="display:flex;align-items:flex-start;gap:8px;">
@@ -2819,6 +3115,7 @@ function renderMatchOppList(opps) {
             ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
             ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
             <span class="chip ${dl.chip}" style="font-size:10px;">${dl.expired===true?"⛔ ":""}${dl.label}</span>
+            ${pm?`<span class="prod-match-badge pmb-${pm.strength}">◈ ${esc(pm.product.name)}</span>`:""}
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
@@ -2844,6 +3141,7 @@ function openDrawer(cat) {
     <button class="fpill" onclick="filterDrw('LOW',this)">● Low (${opps.filter(o=>matchLevel(o)==="low").length})</button>
     ${subcats.map(s=>`<button class="fpill" onclick="filterDrw('SC:${esc(s)}',this)">${s}</button>`).join("")}
     ${opps.some(o=>o.aiml_required)?`<button class="fpill" onclick="filterDrw('AIML',this)">⚡ AI/ML</button>`:""}
+    ${loadProducts().length>0?`<button class="fpill" style="border-color:rgba(208,188,255,0.3);color:var(--purple);" onclick="filterDrw('PRODUCT_MATCH',this)">◈ Product Match</button>`:""}
     <button class="fpill" onclick="filterDrw('HIDE_EXPIRED',this)">Hide Expired</button>
     <button class="fpill" onclick="filterDrw('HIDE_UNKNOWN',this)">Hide Unknown</button>
   `;
@@ -2858,12 +3156,13 @@ function filterDrw(val,btn) {
   const meta = CAT[cat];
   if (!meta) return;
   let opps = S.cats[cat]||[];
-  if      (val==="AIML")         opps=opps.filter(o=>o.aiml_required);
-  else if (val==="HIGH")         opps=opps.filter(o=>matchLevel(o)==="high");
-  else if (val==="MED")          opps=opps.filter(o=>matchLevel(o)==="med");
-  else if (val==="LOW")          opps=opps.filter(o=>matchLevel(o)==="low");
-  else if (val==="HIDE_EXPIRED") opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
-  else if (val==="HIDE_UNKNOWN") opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
+  if      (val==="AIML")          opps=opps.filter(o=>o.aiml_required);
+  else if (val==="HIGH")          opps=opps.filter(o=>matchLevel(o)==="high");
+  else if (val==="MED")           opps=opps.filter(o=>matchLevel(o)==="med");
+  else if (val==="LOW")           opps=opps.filter(o=>matchLevel(o)==="low");
+  else if (val==="PRODUCT_MATCH") opps=opps.filter(o=>bestProductMatch(o)!==null);
+  else if (val==="HIDE_EXPIRED")  opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== true);
+  else if (val==="HIDE_UNKNOWN")  opps=opps.filter(o=>deadlineStatus(o.responseDeadLine).expired !== null);
   else if (val.startsWith("SC:")) opps=opps.filter(o=>o.subcategory===val.slice(3));
   renderOppList(opps, meta.chipCls);
 }
@@ -2876,6 +3175,7 @@ function renderOppList(opps,chipCls) {
     const lvl=matchLevel(o);
     const scoreColor=lvl==="high"?"var(--green)":lvl==="med"?"var(--amber)":"var(--text-3)";
     const dl=deadlineStatus(o.responseDeadLine);
+    const pm=bestProductMatch(o);
     return `
     <div class="opp-row" onclick="openModal('${esc(o.noticeId)}')">
       <div style="display:flex;align-items:flex-start;gap:8px;">
@@ -2891,6 +3191,7 @@ function renderOppList(opps,chipCls) {
             ${(o.tak_types||[]).map(t=>`<span class="chip c-accent" style="font-size:10px;">${t}</span>`).join("")}
             ${o.aiml_required?`<span class="chip c-rose" style="font-size:10px;">⚡ AI/ML</span>`:""}
             <span class="chip ${dl.chip}" style="font-size:10px;">${dl.expired===true?"⛔ ":""}${dl.label}</span>
+            ${pm?`<span class="prod-match-badge pmb-${pm.strength}">◈ ${esc(pm.product.name)}</span>`:""}
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
@@ -2959,6 +3260,27 @@ function openModal(id) {
       </div>
     </div>
     ${opp.uiLink?`<div style="margin-top:4px;"><a class="ext-link" href="${opp.uiLink}" target="_blank"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 2h7M9 2v7M9 2L3.5 7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>View on SAM.gov</a></div>`:""}
+    ${(()=>{
+      const matches = allProductMatches(opp);
+      if (matches.length === 0) return "";
+      return `
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <div class="mf-lbl" style="margin-bottom:12px;">◈ Product Match</div>
+        ${matches.map(m => `
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border:1px solid ${m.strength==="strong"?"rgba(208,188,255,0.25)":"var(--border)"};border-radius:var(--r);margin-bottom:8px;">
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:500;color:${m.strength==="strong"?"var(--purple)":"var(--text-2)"};">${esc(m.product.name)}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;">
+                ${m.hits.map(h=>`<span class="chip c-purple" style="font-size:10px;">${esc(h)}</span>`).join("")}
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <span class="prod-match-badge pmb-${m.strength}">${m.strength === "strong" ? "Strong" : "Partial"}</span>
+              <div style="font-size:10px;color:var(--text-3);margin-top:3px;">${m.score} kw match${m.score!==1?"es":""}</div>
+            </div>
+          </div>`).join("")}
+      </div>`;
+    })()}
   `;
   document.getElementById("modalScrim").classList.add("open");
 }
@@ -3011,6 +3333,564 @@ function resetScan() {
   setProg(0,"","");
   showView("setup");
 }
+
+// ─────────────────────────────────────────────
+// SEARCH SETTINGS — localStorage persistence
+// ─────────────────────────────────────────────
+
+const SETTINGS_KEY = "hitops_settings_v1";
+
+// Snapshot of factory defaults (read once at startup before any overrides)
+const DEFAULT_KEYWORDS = {
+  tak:  [...MISSIONS.tak.fileKeywords],
+  pace: [...MISSIONS.pace.fileKeywords],
+  edge: [...MISSIONS.edge.fileKeywords]
+};
+
+function loadSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); }
+  catch { return {}; }
+}
+
+function saveSettingsToStorage(settings) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+  catch(e) { console.warn("Could not save settings:", e); }
+}
+
+// Apply saved keyword overrides to the live MISSIONS object
+function applySettingsToMissions() {
+  const s = loadSettings();
+  if (s.tak  && Array.isArray(s.tak))  MISSIONS.tak.fileKeywords  = [...s.tak];
+  if (s.pace && Array.isArray(s.pace)) MISSIONS.pace.fileKeywords = [...s.pace];
+  if (s.edge && Array.isArray(s.edge)) MISSIONS.edge.fileKeywords = [...s.edge];
+}
+
+// ─── Panel state ────────────────────────────
+
+let settingsTags = { tak: [], pace: [] }; // working copies while panel is open
+
+function toggleSettingsPanel() {
+  const panel = document.getElementById("settingsPanel");
+  const scrim  = document.getElementById("settingsPanelScrim");
+  // Close products panel if open (they're on opposite sides but avoid confusion)
+  document.getElementById("productsPanel")?.classList.remove("open");
+  document.getElementById("prodPanelScrim").style.display = "none";
+
+  const open = panel.classList.toggle("open");
+  scrim.style.display = open ? "block" : "none";
+  if (open) openSettingsPanel();
+}
+
+function openSettingsPanel() {
+  settingsTags.tak  = [...MISSIONS.tak.fileKeywords];
+  settingsTags.pace = [...MISSIONS.pace.fileKeywords];
+  settingsTags.edge = [...MISSIONS.edge.fileKeywords];
+  renderSettingsTags("tak");
+  renderSettingsTags("pace");
+  renderSettingsTags("edge");
+  initSettingsTagInput("tak");
+  initSettingsTagInput("pace");
+  initSettingsTagInput("edge");
+  hideSavedMsg();
+
+  // Capture wheel events so they scroll the panel body, not the background page
+  const body = document.getElementById("settingsPanelBody");
+  if (body && !body._wheelBound) {
+    body._wheelBound = true;
+    body.addEventListener("wheel", e => {
+      const atTop    = body.scrollTop === 0 && e.deltaY < 0;
+      const atBottom = body.scrollTop + body.clientHeight >= body.scrollHeight && e.deltaY > 0;
+      if (!atTop && !atBottom) e.stopPropagation();
+    }, { passive: true });
+  }
+}
+
+// ─── Tag rendering ───────────────────────────
+
+function renderSettingsTags(mission) {
+  const listEl = document.getElementById(`${mission}KwList`);
+  if (!listEl) return;
+  const styles = {
+    tak:  "background:rgba(138,180,248,0.1);border-color:rgba(138,180,248,0.28);color:var(--blue);",
+    pace: "background:rgba(208,188,255,0.1);border-color:rgba(208,188,255,0.28);color:var(--purple);",
+    edge: "background:rgba(253,214,99,0.1);border-color:rgba(253,214,99,0.28);color:var(--amber);"
+  };
+  const chipStyle = styles[mission] || styles.tak;
+  listEl.innerHTML = settingsTags[mission].map((t, i) => `
+    <span class="tag-chip" style="${chipStyle}">
+      ${esc(t)}
+      <button class="tag-chip-remove" onclick="removeSettingsTag('${mission}',${i})">×</button>
+    </span>`).join("");
+}
+
+function addSettingsTag(mission, raw) {
+  const val = raw.trim().toLowerCase().replace(/,/g, "");
+  if (!val || val.length < 2) return;
+  if (settingsTags[mission].includes(val)) return;
+  settingsTags[mission].push(val);
+  renderSettingsTags(mission);
+}
+
+function removeSettingsTag(mission, idx) {
+  settingsTags[mission].splice(idx, 1);
+  renderSettingsTags(mission);
+}
+
+function initSettingsTagInput(mission) {
+  const input = document.getElementById(`${mission}KwInput`);
+  if (!input || input._bound) return;
+  input._bound = true;
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      input.value.split(",").forEach(v => addSettingsTag(mission, v));
+      input.value = "";
+    } else if (e.key === "Backspace" && input.value === "" && settingsTags[mission].length > 0) {
+      removeSettingsTag(mission, settingsTags[mission].length - 1);
+    }
+  });
+  input.addEventListener("paste", e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text");
+    text.split(/[,\n]+/).forEach(v => addSettingsTag(mission, v));
+  });
+  input.addEventListener("blur", () => {
+    if (input.value.trim()) { addSettingsTag(mission, input.value); input.value = ""; }
+  });
+}
+
+// ─── Save / Reset ────────────────────────────
+
+function saveSettings() {
+  ["tak","pace","edge"].forEach(m => {
+    const input = document.getElementById(`${m}KwInput`);
+    if (input?.value.trim()) { addSettingsTag(m, input.value); input.value = ""; }
+  });
+
+  const settings = {
+    tak:  [...settingsTags.tak],
+    pace: [...settingsTags.pace],
+    edge: [...settingsTags.edge]
+  };
+
+  saveSettingsToStorage(settings);
+  MISSIONS.tak.fileKeywords  = [...settings.tak];
+  MISSIONS.pace.fileKeywords = [...settings.pace];
+  MISSIONS.edge.fileKeywords = [...settings.edge];
+
+  const cfg = MISSIONS[S.mission];
+  const chipsEl = document.getElementById("apiKeywordChips");
+  if (chipsEl && S.mission !== "custom") {
+    chipsEl.innerHTML = cfg.apiKeywords.map(k => `<span class="chip ${cfg.chipColor}">${k}</span>`).join("");
+  }
+  showSavedMsg();
+}
+
+function resetSettingsSection(mission) {
+  settingsTags[mission] = [...DEFAULT_KEYWORDS[mission]];
+  renderSettingsTags(mission);
+}
+
+function resetAllSettings() {
+  settingsTags.tak  = [...DEFAULT_KEYWORDS.tak];
+  settingsTags.pace = [...DEFAULT_KEYWORDS.pace];
+  settingsTags.edge = [...DEFAULT_KEYWORDS.edge];
+  renderSettingsTags("tak");
+  renderSettingsTags("pace");
+  renderSettingsTags("edge");
+}
+
+function showSavedMsg() {
+  const el = document.getElementById("settingsSavedMsg");
+  if (!el) return;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2500);
+}
+
+function hideSavedMsg() {
+  document.getElementById("settingsSavedMsg")?.classList.remove("show");
+}
+
+const PRODUCTS_KEY = "hitops_products_v1";
+
+function loadProducts() {
+  try { return JSON.parse(localStorage.getItem(PRODUCTS_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveProducts(products) {
+  try { localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products)); }
+  catch(e) { console.warn("Could not save products:", e); }
+  updateProdBtnCount();
+}
+
+function updateProdBtnCount() {
+  const n = loadProducts().length;
+  const el = document.getElementById("prodBtnCount");
+  if (el) el.textContent = n;
+}
+
+// ─── Panel open/close ───────────────────────
+
+function toggleProductsPanel() {
+  const panel = document.getElementById("productsPanel");
+  const scrim  = document.getElementById("prodPanelScrim");
+  const open   = panel.classList.toggle("open");
+  scrim.style.display = open ? "block" : "none";
+  if (open) renderProductsPanel();
+}
+
+// ─── Render panel ───────────────────────────
+
+function renderProductsPanel() {
+  const products = loadProducts();
+  const body = document.getElementById("prodPanelBody");
+  if (!body) return;
+
+  // Capture wheel so it scrolls the panel, not the background page
+  if (!body._wheelBound) {
+    body._wheelBound = true;
+    body.addEventListener("wheel", e => {
+      const atTop    = body.scrollTop === 0 && e.deltaY < 0;
+      const atBottom = body.scrollTop + body.clientHeight >= body.scrollHeight && e.deltaY > 0;
+      if (!atTop && !atBottom) e.stopPropagation();
+    }, { passive: true });
+  }
+
+  if (products.length === 0) {
+    body.innerHTML = `
+      <div class="prod-empty">
+        <div class="prod-empty-icon">◈</div>
+        <div style="font-size:14px;color:var(--text-2);margin-bottom:6px;">No products yet</div>
+        <div>Click <strong>Add Product</strong> to define your capabilities.<br>Hit Ops will match them against every opportunity.</div>
+      </div>`;
+    return;
+  }
+
+  body.innerHTML = products.map((p, idx) => `
+    <div class="prod-card" id="prod-card-${idx}">
+      <div class="prod-card-hd">
+        <div class="prod-card-name">${esc(p.name)}</div>
+        <div class="prod-card-actions">
+          <button class="icon-btn" onclick="editProduct(${idx})" title="Edit" style="font-size:12px;">✎</button>
+          <button class="icon-btn" onclick="deleteProduct(${idx})" title="Delete" style="color:var(--rose);">✕</button>
+        </div>
+      </div>
+      <div class="prod-card-body">
+        ${p.description ? `<div class="prod-card-desc">${esc(p.description)}</div>` : ""}
+        <div class="prod-card-kws">
+          ${(p.keywords || []).length
+            ? p.keywords.map(k => `<span class="chip c-purple" style="font-size:10px;">${esc(k)}</span>`).join("")
+            : `<span style="font-size:11px;color:var(--text-3);">No capability keywords yet</span>`}
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+// ─── Add / Edit form ────────────────────────
+
+let editingProductIdx = null;  // null = adding new, number = editing existing
+let formTags = [];
+
+function showAddProductForm() {
+  editingProductIdx = null;
+  formTags = [];
+  showProductForm("Add Product", "", "", []);
+}
+
+function editProduct(idx) {
+  const products = loadProducts();
+  const p = products[idx];
+  if (!p) return;
+  editingProductIdx = idx;
+  formTags = [...(p.keywords || [])];
+  showProductForm("Edit Product", p.name, p.description || "", p.keywords || []);
+}
+
+function showProductForm(title, name, desc, keywords) {
+  const body = document.getElementById("prodPanelBody");
+  formTags = [...keywords];
+
+  body.innerHTML = `
+    <div class="prod-form">
+      <div class="prod-form-title">${title}</div>
+      <div class="field">
+        <div class="field-lbl"><span>Product name</span></div>
+        <input id="prodFormName" class="input" value="${esc(name)}" placeholder="e.g. TAK Edge Server" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <div class="field-lbl"><span>Description</span><span style="color:var(--text-3);font-weight:400;">optional</span></div>
+        <input id="prodFormDesc" class="input" value="${esc(desc)}" placeholder="Brief notes about this product" autocomplete="off"/>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <div class="field-lbl">
+          <span>Capability keywords</span>
+          <span id="prodFormKwCount" style="color:var(--text-3);font-weight:400;">${keywords.length} added</span>
+        </div>
+        <div class="tag-input-wrap" id="prodTagWrap">
+          <div id="prodTagList" style="display:contents;"></div>
+          <input id="prodTagInput" class="tag-input-field"
+            placeholder="Type a keyword, press Enter or , to add…"
+            autocomplete="off" autocapitalize="none" spellcheck="false"/>
+        </div>
+        <div class="tag-hint">Exact word match · Add every term this product supports · e.g. <em>tak server, atak, wintak</em></div>
+      </div>
+      <div class="prod-form-btns">
+        <button class="btn-sm" onclick="cancelProductForm()">Cancel</button>
+        <button class="btn-sm btn-purple" onclick="saveProductForm()">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save Product
+        </button>
+      </div>
+    </div>`;
+
+  renderFormTags();
+  initProductTagInput();
+}
+
+function renderFormTags() {
+  const list  = document.getElementById("prodTagList");
+  const count = document.getElementById("prodFormKwCount");
+  if (!list) return;
+  list.innerHTML = formTags.map((t, i) => `
+    <span class="tag-chip">
+      ${esc(t)}
+      <button class="tag-chip-remove" onclick="removeFormTag(${i})">×</button>
+    </span>`).join("");
+  if (count) count.textContent = formTags.length === 0 ? "0 added" : `${formTags.length} keyword${formTags.length !== 1 ? "s" : ""}`;
+}
+
+function addFormTag(raw) {
+  const val = raw.trim().toLowerCase().replace(/,/g, "");
+  if (!val || val.length < 2 || formTags.includes(val)) return;
+  formTags.push(val);
+  renderFormTags();
+}
+
+function removeFormTag(idx) {
+  formTags.splice(idx, 1);
+  renderFormTags();
+}
+
+function initProductTagInput() {
+  const input = document.getElementById("prodTagInput");
+  if (!input || input._bound) return;
+  input._bound = true;
+  const wrap = document.getElementById("prodTagWrap");
+  if (wrap) wrap.addEventListener("click", () => input.focus());
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      input.value.split(",").forEach(v => addFormTag(v));
+      input.value = "";
+    } else if (e.key === "Backspace" && input.value === "" && formTags.length > 0) {
+      removeFormTag(formTags.length - 1);
+    }
+  });
+  input.addEventListener("paste", e => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text");
+    text.split(/[,\n]+/).forEach(v => addFormTag(v));
+  });
+  input.addEventListener("blur", () => {
+    if (input.value.trim()) { addFormTag(input.value); input.value = ""; }
+  });
+}
+
+function saveProductForm() {
+  const name = (document.getElementById("prodFormName")?.value || "").trim();
+  const desc = (document.getElementById("prodFormDesc")?.value || "").trim();
+  if (!name) { alert("Product name is required."); return; }
+
+  const products = loadProducts();
+  const product  = { name, description: desc, keywords: [...formTags] };
+
+  if (editingProductIdx !== null) {
+    products[editingProductIdx] = product;
+  } else {
+    products.push(product);
+  }
+
+  saveProducts(products);
+  editingProductIdx = null;
+  formTags = [];
+  renderProductsPanel();
+}
+
+function cancelProductForm() {
+  editingProductIdx = null;
+  formTags = [];
+  renderProductsPanel();
+}
+
+function deleteProduct(idx) {
+  const products = loadProducts();
+  const p = products[idx];
+  if (!p) return;
+
+  // Replace the card with an inline confirm rather than using confirm()
+  // which is blocked in file:// context in many browsers
+  const card = document.getElementById(`prod-card-${idx}`);
+  if (!card) return;
+
+  card.innerHTML = `
+    <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div style="font-size:13px;color:var(--text-2);">
+        Delete <strong style="color:var(--text-1);">${esc(p.name)}</strong>?
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn-sm" onclick="renderProductsPanel()">Cancel</button>
+        <button class="btn-sm" style="border-color:rgba(242,139,130,0.35);color:var(--rose);background:rgba(242,139,130,0.08);"
+          onclick="confirmDeleteProduct(${idx})">
+          Delete
+        </button>
+      </div>
+    </div>`;
+}
+
+function confirmDeleteProduct(idx) {
+  const products = loadProducts();
+  products.splice(idx, 1);
+  saveProducts(products);
+  renderProductsPanel();
+}
+
+// ─── Product matching ────────────────────────
+
+// Score an opportunity against a single product.
+// Returns { score, hits } where score ≥ 3 = strong, 1-2 = partial, 0 = none
+function scoreProductMatch(opp, product) {
+  if (!product.keywords || product.keywords.length === 0) return { score: 0, hits: [] };
+  const matchers = buildMatchers(product.keywords);
+  const searchStr = buildSearchString(opp) + " " + (opp.title || "") + " " + (opp.description || "");
+  const hits = matchers
+    .filter(m => m.rx.test(searchStr))
+    .map(m => m.original);
+  return { score: hits.length, hits };
+}
+
+// Find the best-matching product for an opportunity
+// Returns { product, score, hits, strength } or null
+function bestProductMatch(opp) {
+  const products = loadProducts();
+  if (products.length === 0) return null;
+
+  let best = null;
+  for (const p of products) {
+    const { score, hits } = scoreProductMatch(opp, p);
+    if (score > 0 && (!best || score > best.score)) {
+      best = { product: p, score, hits,
+               strength: score >= 3 ? "strong" : "partial" };
+    }
+  }
+  return best;
+}
+
+// Get all product matches ranked for the modal
+function allProductMatches(opp) {
+  const products = loadProducts();
+  return products
+    .map(p => ({ product: p, ...scoreProductMatch(opp, p) }))
+    .filter(r => r.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(r => ({ ...r, strength: r.score >= 3 ? "strong" : "partial" }));
+}
+
+// ─── CSV Import / Export ─────────────────────
+
+function exportProductsCSV() {
+  const products = loadProducts();
+  if (products.length === 0) { alert("No products to export."); return; }
+
+  const rows = [["Name", "Description", "Keywords"]];
+  products.forEach(p => {
+    const kws = (p.keywords || []).join("|");
+    rows.push([p.name, p.description || "", kws]);
+  });
+
+  const csv = rows.map(r =>
+    r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = "hitops-products.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importProductsCSV(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const text  = e.target.result;
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) { alert("CSV appears empty or has no data rows."); return; }
+
+      // Parse header to find column indices (flexible — column order doesn't matter)
+      const headers = parseCSVRow(lines[0]).map(h => h.replace(/^"|"$/g,"").trim().toLowerCase());
+      const iName = headers.findIndex(h => h === "name");
+      const iDesc = headers.findIndex(h => h === "description");
+      const iKw   = headers.findIndex(h => h === "keywords");
+      if (iName === -1 || iKw === -1) {
+        alert('CSV must have "Name" and "Keywords" columns. Found: ' + headers.join(", "));
+        return;
+      }
+
+      const imported = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCSVRow(lines[i]).map(c => c.replace(/^"|"$/g,"").trim());
+        const name = cols[iName] || "";
+        if (!name) continue;
+        const desc = iDesc >= 0 ? (cols[iDesc] || "") : "";
+        const kwRaw = cols[iKw] || "";
+        const keywords = kwRaw.split("|").map(k => k.trim().toLowerCase()).filter(k => k.length >= 2);
+        imported.push({ name, description: desc, keywords });
+      }
+
+      if (imported.length === 0) { alert("No valid products found in the CSV."); return; }
+
+      const existing = loadProducts();
+      const choice = existing.length > 0
+        ? confirm(`Import ${imported.length} product(s)?\n\nOK = Merge with existing ${existing.length} product(s)\nCancel = Replace all existing products`)
+        : true;
+
+      const merged = choice
+        ? mergeProducts(existing, imported)
+        : imported;
+
+      saveProducts(merged);
+      renderProductsPanel();
+      alert(`✓ Imported ${imported.length} product(s). Total: ${merged.length}`);
+    } catch(err) {
+      alert("Import failed: " + err.message);
+    }
+    // Reset so the same file can be imported again
+    event.target.value = "";
+  };
+  reader.readAsText(file, "utf-8");
+}
+
+function mergeProducts(existing, incoming) {
+  const merged = [...existing];
+  for (const p of incoming) {
+    const idx = merged.findIndex(e => e.name.toLowerCase() === p.name.toLowerCase());
+    if (idx >= 0) merged[idx] = p; // replace if name matches
+    else merged.push(p);           // add if new
+  }
+  return merged;
+}
+
+// ─── Initialise on load ─────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  applySettingsToMissions(); // apply any saved keyword overrides before first scan
+  updateProdBtnCount();
+});
 
 function esc(s){return (s||"").replace(/'/g,"\\'").replace(/"/g,"&quot;");}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
